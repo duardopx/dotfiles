@@ -1,11 +1,9 @@
-" By PX
-call plug#begin('~/.vim/plugged')
 
+call plug#begin('~/.vim/plugged')
 
 " Syntax Highlighting, Linting and Completion
 Plug 'sheerun/vim-polyglot'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'davidhalter/jedi-vim'
 
 " File explorers
 Plug 'scrooloose/nerdtree'
@@ -21,10 +19,12 @@ Plug 'junegunn/goyo.vim'
 Plug 'amix/vim-zenroom2'
 
 " Themes
+"Plug 'reedes/vim-thematic'
+Plug 'joshdick/onedark.vim'
 Plug 'morhetz/gruvbox'
-"Plug 'liuchengxu/space-vim-theme'
-"Plug 'kaicataldo/material.vim'
-
+Plug 'sainnhe/gruvbox-material'
+Plug 'nightsense/snow'
+Plug 'mhartington/oceanic-next'
 
 " General Appearance
 Plug 'ryanoasis/vim-devicons'
@@ -44,8 +44,7 @@ Plug 'vim-pandoc/vim-pandoc'
 Plug 'vim-pandoc/vim-pandoc-syntax'
 
 " Delimiters
- Plug 'jiangmiao/auto-pairs'
-
+Plug 'jiangmiao/auto-pairs'
 
 " Surrounding text
 Plug 'tpope/vim-surround'
@@ -53,6 +52,12 @@ Plug 'tpope/vim-surround'
 " Git and GitHub
 Plug 'airblade/vim-gitgutter'
 
+" Scrolling
+Plug 'psliwka/vim-smoothie'
+
+" Status Bar
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 
 " RipGrep
 Plug 'jremmen/vim-ripgrep'
@@ -61,44 +66,205 @@ Plug 'jremmen/vim-ripgrep'
 Plug 'easymotion/vim-easymotion'
 
 " Persistent Scratch Buffers
-"Plug 'mtth/scratch.vim'
-
+Plug 'mtth/scratch.vim'
 
 " TimeTracking
-" Plug 'wakatime/vim-wakatime'
+Plug 'wakatime/vim-wakatime'
 
-" Tmux integration
-Plug 'christoomey/vim-tmux-navigator'
-
+" Undo
+Plug 'mbbill/undotree'
 
 call plug#end()
 
 
+" General Settings  {{{
 
+set secure
+set modeline
+set spelllang=en
+set mouse=nv                    " Use mouse for pane selection, resizing, and cursor movement.
+set nostartofline               " Don’t reset cursor to start of line when moving around.
+set title                       " Show the filename in the window titlebar
+set autoread                    " Autoread changed files
+set clipboard=unnamed           " Enable copying to macOS clipboard
+set noshowmode                  " Don't show mode under statusline w/ mode
+set scrolloff=6                 " Minimal num of lines to keep above/below cursor
+set number                      " Enable line numbers
+set cmdheight=1                 " Better display for messages
+set updatetime=300              " Smaller updatetime for CursorHold & CursorHoldI
+set cursorline                  " Highlight current line
+set hidden                      " Enable buffers to exist in the background
+set nobackup                    " Don't keep a backup file. writebackup is enough for my purposes.
+set splitbelow                  " Open new horizontal splits to the bottom
+set splitright                  " And vertical splits to the right
+set signcolumn=yes              " Always show signcolumns
+set switchbuf=usetab            " Search first in opened windows if opening buffer
+set shortmess+=c                " Don't give ins-completion-menu messages
+set backspace=indent,eol,start  " Make delete in insert mode behave as expected.
+set fillchars+=fold:. " for folds
+syntax on
+
+" Tab completion menu
+set wildmenu
+set wildmode=full
+set wildignore+=.svn,CVS,.git,*.pyc,*.o,*.a,*.class,*.mo,*.la,*.so,*.obj,*.swp,*.jpg,*.png,*.xpm,*.gif,*.pdf,*.bak,*.beam,*/tmp/*,*.zip,log/**,node_modules/**,target/**,tmp/**,*.rbc
+
+
+set undolevels=1000  " store a bunch of undo history
+set undofile
+
+" END Undo }}}
+
+" Use gtf to jump to files with these extensions
+set suffixesadd=.md,.c,.h,.cpp,.py,.tex
+
+set tags=tags
+
+" Don't treat hyphens and underscores like whitespace
+set iskeyword+=-
+set iskeyword+=_
+
+" Search {{{
+
+set showmatch             " Show matching brackets/parenthesis
+set matchtime=0           " Don't blink when matching
+set incsearch             " Find as you type search
+set hlsearch              " Highlight search terms
+set ignorecase            " Case insensitive search
+set inccommand=nosplit    " Show regex replacement changes as you're typing
+set smartcase             " Case sensitive if we type an uppercase
+
+" END Search }}}
+
+" Line breaking {{{
+
+set wrap
+set nolinebreak
+" set textwidth=120       " TODO: break lines when line length increases only outside of markdown and text files
+set breakindent
+set breakindentopt=min:40
+highlight ColorColumn ctermbg=237
+set colorcolumn=81   " 80 and 120 character guidelines
+
+
+
+" Indentation {{{
 
 set copyindent
 set preserveindent
 filetype plugin indent on
 
-set expandtab
-set tabstop=4
+set expandtab           " enter spaces when tab is pressed
+set tabstop=4           " use 4 spaces to represent tab
 set softtabstop=4
-set shiftwidth=4
-set autoindent
+set shiftwidth=4        " number of spaces to use for auto indent
+set autoindent          " copy indent from current line when starting a new lineet noexpandtab
 
 
 
-"let g:material_theme_style = 'dark'
-"let g:material_terminal_italics = 1
+" Appearance {{{
 
-" set color scheme
-colorscheme gruvbox
+set termguicolors
 set background=dark
+let g:gruvbox_contrast_dark='dark'
+colorscheme gruvbox-material
 
-set number
-set relativenumber
+"colorscheme snow
+"colorscheme gruvbox
+"colorscheme onedark
+"colorscheme OceanicNext
 
-" coc config
+" Make vertical splits prettier
+set fillchars+=vert:┃
+highlight VertSplit guifg=9
+
+
+" Vim Dev Icons {{{
+
+let g:WebDevIconsUnicodeGlyphDoubleWidth = 0
+let g:WebDevIconsOS = 'Darwin'
+let g:WebDevIconsNerdTreeGitPluginForceVAlign = 1
+let g:webdevicons_conceal_nerdtree_brackets = 0
+
+" END Vim Dev Icons }}}
+
+" Vista {{{
+
+let g:vista_icon_indent = ["╰─▸ ", "├─▸ "]
+let g:vista#renderer#enable_icon = 1
+let g:vista_fzf_preview = ['right:50%']
+
+" END Vista }}}
+
+" Appearance }}}
+
+" AutoGroups {{{
+
+augroup AutoCloseVim
+    autocmd!
+    " Close vim if the quickfix window is the only window visible (and only tab)
+    " https://stackoverflow.com/a/7477056
+    autocmd WinEnter * if winnr('$') == 1 && &buftype == "quickfix" | quit | endif
+    " Close vim if only thing remaining is NERDTree
+    autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | quit | endif
+    " TODO: Close vim if all that remains is a no-name buffer
+augroup END
+
+augroup VimStartupSequence
+    autocmd!
+    " If opening vim without a file arg, open startify and NERDTree
+    autocmd VimEnter *
+                \   if !argc()
+                \ |   Startify
+                \ |   wincmd w
+                \ | endif
+augroup END
+
+
+augroup RestoreCursorPositionWhenOpeningFile
+    autocmd!
+    autocmd BufReadPost *
+                \ if line("'\"") > 1 && line("'\"") <= line("$") |
+                \   execute "normal! g`\"" |
+                \ endif
+augroup END
+
+" Automatically use absolute line numbers when we’re in insert mode
+" and relative numbers when we’re in normal mode.
+augroup LineNumbers
+    autocmd!
+    autocmd InsertEnter * :set number
+    autocmd InsertLeave * :set relativenumber
+augroup END
+
+augroup Indentation
+    autocmd!
+    " configure expanding of tabs for various file types
+    au BufRead,BufNewFile *.py set expandtab
+    au BufRead,BufNewFile *.c set noexpandtab
+    au BufRead,BufNewFile *.h set noexpandtab
+    au BufRead,BufNewFile Makefile* set noexpandtab
+augroup END
+
+augroup SetCorrectFiletype
+    autocmd!
+    autocmd BufRead,BufNewFile *.md set filetype=pandoc
+    autocmd BufRead,BufNewFile *.txt set filetype=text
+augroup END
+
+augroup MarkdownConcealing
+    autocmd!
+    autocmd FileType markdown set conceallevel=0
+augroup END
+
+
+augroup NoPasteAfterLeavingInsertMode
+    autocmd!
+    au InsertLeave * silent! set nopaste
+augroup END
+
+" tbh not sure if this should stay
+augroup coc-config
 let g:coc_global_extensions = [
   \ 'coc-snippets',
   \ 'coc-pairs',
@@ -228,3 +394,146 @@ nnoremap <silent> <space>j  :<C-u>CocNext<CR>
 nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list
 nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+
+
+
+" Functions {{{
+
+" Append modeline after last line in buffer
+function! AppendModeline() abort
+  let l:modeline = printf("# vim: ts=%d sw=%d tw=%d %set :",
+        \ &tabstop, &shiftwidth, &textwidth, &expandtab ? '' : 'no')
+  call append(line("$"), l:modeline)
+  doautocmd BufRead
+endfunction
+
+" Modeline for nasm files
+function! AppendASMModeline() abort
+let l:modeline = printf("; vim: ft=nasm ts=%d sw=%d tw=%d et :",
+        \ &tabstop, &shiftwidth, &textwidth)
+  call append(line("$"), l:modeline)
+  doautocmd BufRead
+endfunction
+
+
+function! ToggleNerdTree() abort
+    :NERDTreeToggle
+    :AirlineRefresh
+endfunction
+
+
+
+" === Remappings
+
+" Set , as leader and - as localleader
+let mapleader = ","
+
+" Quickly edit important configs
+nnoremap <leader>ev :drop ~/.config/nvim/init.vim<cr>
+nnoremap <leader>et :drop ~/.tmux.conf<cr>
+nnoremap <leader>ez :drop ~/.zshrc<cr>
+
+
+" Split window
+nmap ss :split<Return><C-w>w
+nmap sv :vsplit<Return><C-w>w" Move window
+
+map sh <C-w>h
+map sk <C-w>k
+map sj <C-w>j
+map sl <C-w>l
+
+
+
+" Yeet those 'Not an editor command' errors right out the fucking window
+" Or, defenestrate, as my Dad would say.
+command! WQ wq
+command! Wq wq
+command! W w
+command! Q q
+command! Qa qa
+
+
+" Make U do the opposite of u (redo)
+nnoremap U <C-r>
+
+
+" Save one chracter when saving, and only write if there are changes
+nnoremap <leader>w :w<CR>
+
+
+" FZF mappings
+" Little hack to make this play nicely with setWorkingDirForCurrentWindow
+nnoremap <C-p> :Files<CR>
+nnoremap <C-p>. :Files ..<CR>
+nnoremap <C-p>.. :Files ../..<CR>
+nnoremap <C-p>... :Files ../../..<CR>
+nnoremap <leader>b :Buffers<CR>
+
+" Toggle file browser, undotree and Vista tagbar
+nnoremap <leader>u :UndotreeToggle<cr>
+nnoremap <C-t> :call ToggleNerdTree()<CR>
+nnoremap <Leader>v :Vista!!<CR>
+
+
+" vim-startify {{{
+
+let g:startify_lists = [
+            \ { 'type': 'files',     'header': ['   MRU']            },
+            \ { 'type': 'dir',       'header': ['   MRU '. getcwd()] },
+            \ { 'type': 'sessions',  'header': ['   Sessions']       },
+            \ { 'type': 'bookmarks', 'header': ['   Bookmarks']      },
+            \ { 'type': 'commands',  'header': ['   Commands']       },
+            \ ]
+
+let g:startify_bookmarks = [
+            \ {'a': '~/.vimrc'},
+            \ {'b': '~/.zshrc'},
+            \ {'c': '~/.tmux.conf'},
+            \ {'d': '~/Desktop/personal/'},
+            \ {'e': '~/Desktop/Development/notes'} ]
+
+let g:startify_custom_header = [
+              \ '                  _            .',
+              \ '                 u            @88>',
+              \ '    u.    u.    88Nu.   u.    %8P      ..    .     :',
+              \ '  x@88k ,@88c, ‘88888 ,888c    .     .888: x888  x888.',
+              \ ' ^`8888""8888“  ^8888  8888  .@88u  ~`8888~‘888X`?888f`',
+              \ '   8888  888R    8888  8888 ‘‘888E`   X888  888X ‘888>',
+              \ '   8888  888R   .8888b.888P   888E    X888  888X ‘888>',
+              \ '  “*88*“ 8888“   ^Y8888*““    888&   “*88% “*88“ ‘888!`',
+              \ '    ““   ‘Y“       `Y“        R888“    `~    “    `“`',
+              \ '                               ““',
+              \ '',
+              \ '            And down the rabbit hole we go...',
+              \ ]
+
+let g:startify_files_number = 8
+let g:startify_update_oldfiles = 0
+let g:startify_session_persistence = 1
+let g:startify_session_autoload = 1
+
+
+ " Undotree
+
+let g:undotree_SetFocusWhenToggle = 1
+
+
+" NERDTree
+
+let NERDTreeShowHidden = 1
+let NERDTreeStatusline = 0
+
+
+" vim-easymotion
+
+" Turn on case insensitive feature
+let g:EasyMotion_smartcase = 1
+
+
+" vim-airline
+
+let g:airline_theme='onedark'
+let g:airline_powerline_fonts = 1
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#fnamemod = ':t'

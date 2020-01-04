@@ -2,9 +2,10 @@
 # Path to your oh-my-zsh installation.
 export ZSH="/home/nameless/.oh-my-zsh"
 
+if [ "$TMUX" = "" ]; then tmux; fi
+
 # Theme
 ZSH_THEME="theunraveler"
-
 
 # Color of theme
 autoload -U colors && colors
@@ -28,3 +29,5 @@ bindkey -M menuselect 'j' vi-down-line-or-history
 
 alias vi="nvim"
 alias py="python3"
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

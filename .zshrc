@@ -7,10 +7,6 @@ if [ "$TMUX" = "" ]; then tmux; fi
 # Theme
 ZSH_THEME="theunraveler"
 
-# Color of theme
-autoload -U colors && colors
-PROMPT='%{$fg[blue]%}$(git_prompt_info)%{$reset_color%} $(git_prompt_status)%{$reset_color%}'
-
 # Plugins
 plugins=(
     git

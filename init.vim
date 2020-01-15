@@ -76,8 +76,11 @@ Plug 'mbbill/undotree'
 
 call plug#end()
 
+" Remap esc to caps
+au VimEnter * silent! !xmodmap -e 'clear Lock' -e 'keycode 0x42 = Escape'
+au VimLeave * silent! !xmodmap -e 'clear Lock' -e 'keycode 0x42 = Caps_Lock'
 
-" General Settings  {{{
+" General Settings
 
 set secure
 set modeline
@@ -124,7 +127,7 @@ set tags=tags
 set iskeyword+=-
 set iskeyword+=_
 
-" Search {{{
+" Search
 
 set showmatch             " Show matching brackets/parenthesis
 set matchtime=0           " Don't blink when matching
@@ -134,9 +137,8 @@ set ignorecase            " Case insensitive search
 set inccommand=nosplit    " Show regex replacement changes as you're typing
 set smartcase             " Case sensitive if we type an uppercase
 
-" END Search }}}
 
-" Line breaking {{{
+" Line breaking
 
 set wrap
 set nolinebreak
@@ -148,7 +150,7 @@ set colorcolumn=81   " 80 and 120 character guidelines
 
 
 
-" Indentation {{{
+" Indentation
 
 set copyindent
 set preserveindent
@@ -162,43 +164,36 @@ set autoindent          " copy indent from current line when starting a new line
 
 
 
-" Appearance {{{
+" Appearance
 
 set termguicolors
 set background=dark
 let g:gruvbox_contrast_dark='dark'
 colorscheme gruvbox-material
 
-"colorscheme snow
-"colorscheme gruvbox
-"colorscheme onedark
-"colorscheme OceanicNext
 
 " Make vertical splits prettier
 set fillchars+=vert:┃
 highlight VertSplit guifg=9
 
 
-" Vim Dev Icons {{{
+" Vim Dev Icons
 
 let g:WebDevIconsUnicodeGlyphDoubleWidth = 0
 let g:WebDevIconsOS = 'Darwin'
 let g:WebDevIconsNerdTreeGitPluginForceVAlign = 1
 let g:webdevicons_conceal_nerdtree_brackets = 0
 
-" END Vim Dev Icons }}}
 
-" Vista {{{
+" Vista
 
 let g:vista_icon_indent = ["╰─▸ ", "├─▸ "]
 let g:vista#renderer#enable_icon = 1
 let g:vista_fzf_preview = ['right:50%']
 
-" END Vista }}}
 
-" Appearance }}}
 
-" AutoGroups {{{
+" AutoGroups
 
 augroup AutoCloseVim
     autocmd!
@@ -283,7 +278,7 @@ set nobackup
 set nowritebackup
 
 " Better display for messages
-set cmdheight=2
+"set cmdheight=2
 
 " You will have bad experience for diagnostic messages when it's default 4000.
 set updatetime=300
@@ -293,6 +288,10 @@ set shortmess+=c
 
 " always show signcolumns
 set signcolumn=yes
+
+" Remove delay in escapekey
+set timeoutlen=1000 ttimeoutlen=0
+
 
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
@@ -405,7 +404,7 @@ nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 
 
-" Functions {{{
+" Functions
 
 " Append modeline after last line in buffer
 function! AppendModeline() abort
@@ -491,6 +490,7 @@ nnoremap <leader>b :Buffers<CR>
 nnoremap <leader>u :UndotreeToggle<cr>
 nnoremap tt :call ToggleNerdTree()<CR>
 nnoremap <Leader>v :Vista!!<CR>
+
 
 
 " vim-startify {{{

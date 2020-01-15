@@ -21,8 +21,7 @@ Plug 'amix/vim-zenroom2'
 " Themes
 "Plug 'reedes/vim-thematic'
 Plug 'joshdick/onedark.vim'
-Plug 'morhetz/gruvbox'
-Plug 'sainnhe/gruvbox-material'
+Plug 'gruvbox-community/gruvbox'
 Plug 'nightsense/snow'
 Plug 'mhartington/oceanic-next'
 
@@ -116,7 +115,6 @@ set wildignore+=.svn,CVS,.git,*.pyc,*.o,*.a,*.class,*.mo,*.la,*.so,*.obj,*.swp,*
 set undolevels=1000  " store a bunch of undo history
 set undofile
 
-" END Undo }}}
 
 " Use gtf to jump to files with these extensions
 set suffixesadd=.md,.c,.h,.cpp,.py,.tex
@@ -142,7 +140,6 @@ set smartcase             " Case sensitive if we type an uppercase
 
 set wrap
 set nolinebreak
-" set textwidth=120       " TODO: break lines when line length increases only outside of markdown and text files
 set breakindent
 set breakindentopt=min:40
 highlight ColorColumn ctermbg=237
@@ -166,10 +163,11 @@ set autoindent          " copy indent from current line when starting a new line
 
 " Appearance
 
+colorscheme gruvbox
 set termguicolors
-set background=dark
-let g:gruvbox_contrast_dark='dark'
-colorscheme gruvbox-material
+"let g:gruvbox_contrast_dark='hard'
+let g:gruvbox_contrast_light='hard'
+"g:gruvbox_contrast_dark
 
 
 " Make vertical splits prettier
@@ -495,13 +493,13 @@ nnoremap <Leader>v :Vista!!<CR>
 
 " vim-startify {{{
 
-"let g:startify_lists = [
-"            \ { 'type': 'files',     'header': ['   MRU']            },
-"            \ { 'type': 'dir',       'header': ['   MRU '. getcwd()] },
-"            \ { 'type': 'sessions',  'header': ['   Sessions']       },
-"            \ { 'type': 'bookmarks', 'header': ['   Bookmarks']      },
-"            \ { 'type': 'commands',  'header': ['   Commands']       },
-"            \ ]
+let g:startify_lists = [
+            \ { 'type': 'files',     'header': ['   MRU']            },
+            \ { 'type': 'dir',       'header': ['   MRU '. getcwd()] },
+            \ { 'type': 'sessions',  'header': ['   Sessions']       },
+            \ { 'type': 'bookmarks', 'header': ['   Bookmarks']      },
+            \ { 'type': 'commands',  'header': ['   Commands']       },
+            \ ]
 
 let g:startify_bookmarks = [
             \ {'v': '~/.config/nvim/init.vim'},

@@ -2,7 +2,7 @@ font:
   # The normal (roman) font face to use.
   normal:
     family: sourcecodepro
-    style: Regular
+    style: Italic
 
     # The bold font face
     bold:
@@ -15,4 +15,4 @@ font:
         style: Italic
 
         # Point size of the font
-        size: 10 
+        size: 16.0

@@ -1,0 +1,18 @@
+font:
+  # The normal (roman) font face to use.
+  normal:
+    family: sourcecodepro
+    style: Regular
+
+    # The bold font face
+    bold:
+      family: sourcecodepro
+      style: Bold
+
+      # The italic font face
+      italic:
+        family: sourcecodepro
+        style: Italic
+
+        # Point size of the font
+        size: 10 

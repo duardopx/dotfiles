@@ -163,11 +163,10 @@ set autoindent          " copy indent from current line when starting a new line
 
 " Appearance
 
-colorscheme gruvbox
 set termguicolors
-"let g:gruvbox_contrast_dark='hard'
-let g:gruvbox_contrast_light='hard'
-"g:gruvbox_contrast_dark
+set background=dark
+let g:gruvbox_contrast_dark = 'hard'
+colorscheme gruvbox
 
 
 " Make vertical splits prettier

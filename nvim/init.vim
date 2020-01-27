@@ -1,4 +1,3 @@
-
 call plug#begin('~/.vim/plugged')
 
 " Syntax Highlighting, Linting and Completion
@@ -7,40 +6,27 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " File explorers
 Plug 'scrooloose/nerdtree'
-
-" fzf
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
 " Writing-related
-Plug 'reedes/vim-litecorrect'
 Plug 'szw/vim-dict'
+Plug 'reedes/vim-lexical'
+Plug 'reedes/vim-litecorrect'
 Plug 'junegunn/goyo.vim'
 Plug 'amix/vim-zenroom2'
 
 " Themes
-"Plug 'reedes/vim-thematic'
-Plug 'joshdick/onedark.vim'
 Plug 'gruvbox-community/gruvbox'
-Plug 'nightsense/snow'
-Plug 'mhartington/oceanic-next'
 
 " General Appearance
 Plug 'ryanoasis/vim-devicons'
-Plug 'mhinz/vim-startify'
-Plug 'ntpeters/vim-better-whitespace'
 
 " Tagbar
 Plug 'liuchengxu/vista.vim'
 
 " Register Preview
 Plug 'junegunn/vim-peekaboo'
-
-" Markdown
-Plug 'godlygeek/tabular'
-Plug 'dkarter/bullets.vim'
-Plug 'vim-pandoc/vim-pandoc'
-Plug 'vim-pandoc/vim-pandoc-syntax'
 
 " Delimiters
 Plug 'jiangmiao/auto-pairs'
@@ -50,9 +36,6 @@ Plug 'tpope/vim-surround'
 
 " Git and GitHub
 Plug 'airblade/vim-gitgutter'
-
-" Scrolling
-Plug 'psliwka/vim-smoothie'
 
 " Status Bar
 Plug 'vim-airline/vim-airline'
@@ -64,14 +47,14 @@ Plug 'jremmen/vim-ripgrep'
 " Quick Jump
 Plug 'easymotion/vim-easymotion'
 
-" Persistent Scratch Buffers
-Plug 'mtth/scratch.vim'
-
 " TimeTracking
 Plug 'wakatime/vim-wakatime'
 
 " Undo
 Plug 'mbbill/undotree'
+
+" Comment
+Plug 'tpope/vim-commentary'
 
 call plug#end()
 
@@ -103,6 +86,7 @@ set signcolumn=yes              " Always show signcolumns
 set switchbuf=usetab            " Search first in opened windows if opening buffer
 set shortmess+=c                " Don't give ins-completion-menu messages
 set backspace=indent,eol,start  " Make delete in insert mode behave as expected.
+set timeoutlen=1000 ttimeoutlen=0 " Remove delay in escapekey
 set fillchars+=fold:. " for folds
 syntax on
 
@@ -202,16 +186,6 @@ augroup AutoCloseVim
     " TODO: Close vim if all that remains is a no-name buffer
 augroup END
 
-augroup VimStartupSequence
-    autocmd!
-    " If opening vim without a file arg, open startify and NERDTree
-    autocmd VimEnter *
-                \   if !argc()
-                \ |   Startify
-                \ |   wincmd w
-                \ | endif
-augroup END
-
 
 augroup RestoreCursorPositionWhenOpeningFile
     autocmd!
@@ -260,34 +234,9 @@ augroup coc-config
 let g:coc_global_extensions = [
   \ 'coc-tsserver',
   \ 'coc-python',
-  \ 'coc-eslint',
-  \ 'coc-prettier',
-  \ 'coc-json',
   \ 'coc-texlab',
   \ 'coc-emmet'
   \ ]
-
-" if hidden is not set, TextEdit might fail.
-set hidden
-
-" Some servers have issues with backup files, see #649
-set nobackup
-set nowritebackup
-
-" Better display for messages
-"set cmdheight=2
-
-" You will have bad experience for diagnostic messages when it's default 4000.
-set updatetime=300
-
-" don't give |ins-completion-menu| messages.
-set shortmess+=c
-
-" always show signcolumns
-set signcolumn=yes
-
-" Remove delay in escapekey
-set timeoutlen=1000 ttimeoutlen=0
 
 
 " Use tab for trigger completion with characters ahead and navigate.
@@ -402,33 +351,13 @@ nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 
 
 " Functions
-
-" Append modeline after last line in buffer
-function! AppendModeline() abort
-  let l:modeline = printf("# vim: ts=%d sw=%d tw=%d %set :",
-        \ &tabstop, &shiftwidth, &textwidth, &expandtab ? '' : 'no')
-  call append(line("$"), l:modeline)
-  doautocmd BufRead
-endfunction
-
-" Modeline for nasm files
-function! AppendASMModeline() abort
-let l:modeline = printf("; vim: ft=nasm ts=%d sw=%d tw=%d et :",
-        \ &tabstop, &shiftwidth, &textwidth)
-  call append(line("$"), l:modeline)
-  doautocmd BufRead
-endfunction
-
-
 function! ToggleNerdTree() abort
     :NERDTreeToggle
     :AirlineRefresh
 endfunction
 
 
-
 " === Remappings
-
 " Set , as leader and - as localleader
 let mapleader = ","
 
@@ -439,8 +368,8 @@ nnoremap <leader>ez :drop ~/.zshrc<cr>
 
 
 " Split window
-nmap ss :split<Return><C-w>w
-nmap sv :vsplit<Return><C-w>w" Move window
+nmap ss :split<Return><C-w>
+nmap sv :vsplit<Return><C-w>
 
 " Switch window
 map sh <C-w>h
@@ -465,12 +394,11 @@ command! Qa qa
 " Make U do the opposite of u (redo)
 nnoremap U <C-r>
 
-
 " Save one chracter when saving, and only write if there are changes
-nnoremap <leader>w :w<CR>
+nnoremap <leader>w : w<CR>
 
 " Exit from close file quickli
-nnoremap <leader>q :q!<CR>
+nnoremap <leader>q : q!<CR>
 
 " Exit from close file quickli
 nnoremap <leader>x :x<CR>
@@ -488,63 +416,20 @@ nnoremap <leader>u :UndotreeToggle<cr>
 nnoremap tt :call ToggleNerdTree()<CR>
 nnoremap <Leader>v :Vista!!<CR>
 
-
-
-" vim-startify {{{
-
-let g:startify_lists = [
-            \ { 'type': 'files',     'header': ['   MRU']            },
-            \ { 'type': 'dir',       'header': ['   MRU '. getcwd()] },
-            \ { 'type': 'sessions',  'header': ['   Sessions']       },
-            \ { 'type': 'bookmarks', 'header': ['   Bookmarks']      },
-            \ { 'type': 'commands',  'header': ['   Commands']       },
-            \ ]
-
-let g:startify_bookmarks = [
-            \ {'v': '~/.config/nvim/init.vim'},
-            \ {'z': '~/.zshrc'},
-            \ {'tx': '~/.tmux.conf'}]
-
-let g:startify_custom_header = [
-              \ '                  _            .',
-              \ '                 u            @88>',
-              \ '    u.    u.    88Nu.   u.    %8P      ..    .     :',
-              \ '  x@88k ,@88c, ‘88888 ,888c    .     .888: x888  x888.',
-              \ ' ^`8888""8888“  ^8888  8888  .@88u  ~`8888~‘888X`?888f`',
-              \ '   8888  888R    8888  8888 ‘‘888E`   X888  888X ‘888>',
-              \ '   8888  888R   .8888b.888P   888E    X888  888X ‘888>',
-              \ '  “*88*“ 8888“   ^Y8888*““    888&   “*88% “*88“ ‘888!`',
-              \ '    ““   ‘Y“       `Y“        R888“    `~    “    `“`',
-              \ '                               ““',
-              \ '',
-              \ '            And down the rabbit hole we go...',
-              \ ]
-
-let g:startify_files_number = 8
-let g:startify_update_oldfiles = 0
-let g:startify_session_persistence = 1
-let g:startify_session_autoload = 1
-
-
  " Undotree
-
 let g:undotree_SetFocusWhenToggle = 1
 
 
 " NERDTree
-
 let NERDTreeShowHidden = 1
 let NERDTreeStatusline = 0
 
 
 " vim-easymotion
-
-" Turn on case insensitive feature
 let g:EasyMotion_smartcase = 1
 
 
 " vim-airline
-
 let g:airline_theme='onedark'
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1

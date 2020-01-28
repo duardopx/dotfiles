@@ -403,18 +403,24 @@ nnoremap <leader>q : q!<CR>
 " Exit from close file quickli
 nnoremap <leader>x :x<CR>
 
+nnoremap <leader>te :tabnew<cr>
+
 " FZF mappings
-" Little hack to make this play nicely with setWorkingDirForCurrentWindow
 nnoremap <C-p> :Files<CR>
 nnoremap <C-p>. :Files ..<CR>
 nnoremap <C-p>.. :Files ../..<CR>
 nnoremap <C-p>... :Files ../../..<CR>
+
+" Check File buffers
 nnoremap <leader>b :Buffers<CR>
 
 " Toggle file browser, undotree and Vista tagbar
 nnoremap <leader>u :UndotreeToggle<cr>
-nnoremap tt :call ToggleNerdTree()<CR>
+nnoremap <leader>f :call ToggleNerdTree()<CR>
 nnoremap <Leader>v :Vista!!<CR>
+
+" Goyo
+nnoremap <silent> <leader>G :Goyo<cr>
 
  " Undotree
 let g:undotree_SetFocusWhenToggle = 1

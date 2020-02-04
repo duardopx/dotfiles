@@ -1,8 +1,17 @@
 call plug#begin('~/.vim/plugged')
 
+
+" Requeriment for gist
+Plug 'mattn/webapi-vim'
+
 " Syntax Highlighting, Linting and Completion
 Plug 'sheerun/vim-polyglot'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'davidhalter/jedi-vim'
+
+" Snippets
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
 
 " File explorers
 Plug 'scrooloose/nerdtree'
@@ -10,9 +19,8 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
 " Writing-related
-Plug 'szw/vim-dict'
-Plug 'reedes/vim-lexical'
 Plug 'reedes/vim-litecorrect'
+Plug 'szw/vim-dict'
 Plug 'junegunn/goyo.vim'
 Plug 'amix/vim-zenroom2'
 
@@ -28,6 +36,12 @@ Plug 'liuchengxu/vista.vim'
 " Register Preview
 Plug 'junegunn/vim-peekaboo'
 
+" Markdown
+Plug 'godlygeek/tabular'
+Plug 'dkarter/bullets.vim'
+Plug 'vim-pandoc/vim-pandoc'
+Plug 'vim-pandoc/vim-pandoc-syntax'
+
 " Delimiters
 Plug 'jiangmiao/auto-pairs'
 
@@ -35,7 +49,8 @@ Plug 'jiangmiao/auto-pairs'
 Plug 'tpope/vim-surround'
 
 " Git and GitHub
-Plug 'airblade/vim-gitgutter'
+Plug 'mattn/vim-gist'
+Plug 'tpope/vim-fugitive'
 
 " Status Bar
 Plug 'vim-airline/vim-airline'
@@ -381,9 +396,6 @@ nmap - :tabprev<Return>
 nmap = :tabnext<Return>
 
 
-
-" Yeet those 'Not an editor command' errors right out the fucking window
-" Or, defenestrate, as my Dad would say.
 command! WQ wq
 command! Wq wq
 command! W w

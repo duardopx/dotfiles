@@ -69,7 +69,7 @@ Plug 'wakatime/vim-wakatime'
 Plug 'mbbill/undotree'
 
 " Comment
-Plug 'tpope/vim-commentary'
+Plug 'scrooloose/nerdcommenter'
 
 call plug#end()
 
@@ -392,6 +392,7 @@ map sk <C-w>k
 map sj <C-w>j
 map sl <C-w>l
 
+
 nmap - :tabprev<Return>
 nmap = :tabnext<Return>
 
@@ -427,9 +428,9 @@ nnoremap <C-p>... :Files ../../..<CR>
 nnoremap <leader>b :Buffers<CR>
 
 " Toggle file browser, undotree and Vista tagbar
-nnoremap <leader>u :UndotreeToggle<cr>
-nnoremap <leader>f :call ToggleNerdTree()<CR>
-nnoremap <Leader>v :Vista!!<CR>
+nnoremap <leader> u :UndotreeToggle<cr>
+nnoremap <space> : NERDTree<CR>
+nnoremap <Leader> v :Vista!!<CR>
 
 " Goyo
 nnoremap <silent> <leader>G :Goyo<cr>

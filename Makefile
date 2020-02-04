@@ -5,7 +5,7 @@ pull:
 	cp ~/.tmux.conf ./tmux
 	cp ~/.zshrc ./zsh
 	cp ~/.zprofile ./zsh
-	cp ~/.config/nvim/init.vim .nvim
+	cp ~/.config/nvim/init.vim nvim
 	cp ~/.config/i3/config ./i3
 	cp ~/.config/alacritty/alacritty.yml ./alacritty
 

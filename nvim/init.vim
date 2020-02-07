@@ -1,20 +1,29 @@
+" .vimrc for Neovim on macOS using iTerm2
+" Written by: Aaron Lichtman (and the internet)
+
+" I've spent 10,000 fucking hours on this thing. I hope someone else gets some
+" use out of this.
+
+
+" Plugins {{{
+
 call plug#begin('~/.vim/plugged')
 
-
-" Requeriment for gist
+" Dependency for gist-vim
 Plug 'mattn/webapi-vim'
 
 " Syntax Highlighting, Linting and Completion
 Plug 'sheerun/vim-polyglot'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'davidhalter/jedi-vim'
 
 " Snippets
-Plug 'SirVer/ultisnips'
-Plug 'honza/vim-snippets'
+" Plug 'SirVer/ultisnips'
+" Plug 'honza/vim-snippets'
 
 " File explorers
 Plug 'scrooloose/nerdtree'
+
+" fzf
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
@@ -29,6 +38,7 @@ Plug 'gruvbox-community/gruvbox'
 
 " General Appearance
 Plug 'ryanoasis/vim-devicons'
+Plug 'ntpeters/vim-better-whitespace'
 
 " Tagbar
 Plug 'liuchengxu/vista.vim'
@@ -49,8 +59,11 @@ Plug 'jiangmiao/auto-pairs'
 Plug 'tpope/vim-surround'
 
 " Git and GitHub
-Plug 'mattn/vim-gist'
 Plug 'tpope/vim-fugitive'
+Plug 'mattn/gist-vim'
+
+" File Scrolling
+Plug 'psliwka/vim-smoothie'
 
 " Status Bar
 Plug 'vim-airline/vim-airline'
@@ -62,22 +75,24 @@ Plug 'jremmen/vim-ripgrep'
 " Quick Jump
 Plug 'easymotion/vim-easymotion'
 
+
+" Commenting
+Plug 'scrooloose/nerdcommenter'
+
 " TimeTracking
 Plug 'wakatime/vim-wakatime'
 
 " Undo
 Plug 'mbbill/undotree'
 
-" Comment
-Plug 'scrooloose/nerdcommenter'
-
 call plug#end()
 
-" Remap esc to caps
-au VimEnter * silent! !xmodmap -e 'clear Lock' -e 'keycode 0x42 = Escape'
-au VimLeave * silent! !xmodmap -e 'clear Lock' -e 'keycode 0x42 = Caps_Lock'
+" Extended % matching
+runtime macros/matchit.vim
 
-" General Settings
+" }}}
+
+" General Settings  {{{
 
 set secure
 set modeline
@@ -101,8 +116,7 @@ set signcolumn=yes              " Always show signcolumns
 set switchbuf=usetab            " Search first in opened windows if opening buffer
 set shortmess+=c                " Don't give ins-completion-menu messages
 set backspace=indent,eol,start  " Make delete in insert mode behave as expected.
-set timeoutlen=1000 ttimeoutlen=0 " Remove delay in escapekey
-set fillchars+=fold:. " for folds
+set fillchars+=fold:.           " Make folds pretty.
 syntax on
 
 " Tab completion menu
@@ -110,10 +124,12 @@ set wildmenu
 set wildmode=full
 set wildignore+=.svn,CVS,.git,*.pyc,*.o,*.a,*.class,*.mo,*.la,*.so,*.obj,*.swp,*.jpg,*.png,*.xpm,*.gif,*.pdf,*.bak,*.beam,*/tmp/*,*.zip,log/**,node_modules/**,target/**,tmp/**,*.rbc
 
+" Undo {{{
 
 set undolevels=1000  " store a bunch of undo history
 set undofile
 
+" END Undo }}}
 
 " Use gtf to jump to files with these extensions
 set suffixesadd=.md,.c,.h,.cpp,.py,.tex
@@ -124,7 +140,7 @@ set tags=tags
 set iskeyword+=-
 set iskeyword+=_
 
-" Search
+" Search {{{
 
 set showmatch             " Show matching brackets/parenthesis
 set matchtime=0           " Don't blink when matching
@@ -134,19 +150,27 @@ set ignorecase            " Case insensitive search
 set inccommand=nosplit    " Show regex replacement changes as you're typing
 set smartcase             " Case sensitive if we type an uppercase
 
+" END Search }}}
 
-" Line breaking
+" Line breaking {{{
 
 set wrap
 set nolinebreak
+" set textwidth=120       " TODO: break lines when line length increases only outside of markdown and text files
 set breakindent
 set breakindentopt=min:40
 highlight ColorColumn ctermbg=237
-set colorcolumn=81   " 80 and 120 character guidelines
+set colorcolumn=81   " 80 character guidelines
 
+" END Line breaking }}}
 
+" Show “invisible” characters
+" TODO: Show leading spaces.
+set list
+set listchars=tab:▸\ ,trail:·,eol:¬,nbsp:_
+" set listchars=tab:→\ ,trail:·,eol:¬,nbsp:_
 
-" Indentation
+" Indentation {{{
 
 set copyindent
 set preserveindent
@@ -158,9 +182,11 @@ set softtabstop=4
 set shiftwidth=4        " number of spaces to use for auto indent
 set autoindent          " copy indent from current line when starting a new lineet noexpandtab
 
+" END Indentation }}}
 
+" END General Settings }}}
 
-" Appearance
+" Appearance {{{
 
 set termguicolors
 set background=dark
@@ -172,24 +198,56 @@ colorscheme gruvbox
 set fillchars+=vert:┃
 highlight VertSplit guifg=9
 
+" Make search highlighting tolerable
+" hi Search ctermbg=9
+" hi Search ctermfg=Red
 
-" Vim Dev Icons
+" TODO: Fix this mess
+" let g:thematic#theme_name = 'gruvbox-material'
+"
+" let g:thematic#defaults = {
+" \ 'airline-theme': 'onedark',
+" \ }
+"
+" " TODO: Resolve airline-theme change bug on source vimrc
+" let g:thematic#themes = {
+" \ 'gruvbox-material' : {
+" \              "airline-theme": 'onedark',
+" \ },
+" \ }
+"
+" " let g:thematic#themes = {
+" " \ 'snow'  : {},
+" " \ 'gruvbox' : {
+" " \              'airline-theme': 'onedark',
+" " \ },
+" " \ 'gruvbox-material' : {
+" " \              'airline-theme': 'onedark',
+" " \ },
+" " \ 'onedark' : {},
+" " \ 'OceanicNext' : {},
+" " \ }
+
+" Vim Dev Icons {{{
 
 let g:WebDevIconsUnicodeGlyphDoubleWidth = 0
 let g:WebDevIconsOS = 'Darwin'
 let g:WebDevIconsNerdTreeGitPluginForceVAlign = 1
 let g:webdevicons_conceal_nerdtree_brackets = 0
 
+" END Vim Dev Icons }}}
 
-" Vista
+" Vista {{{
 
 let g:vista_icon_indent = ["╰─▸ ", "├─▸ "]
 let g:vista#renderer#enable_icon = 1
 let g:vista_fzf_preview = ['right:50%']
 
+" END Vista }}}
 
+" Appearance }}}
 
-" AutoGroups
+" AutoGroups {{{
 
 augroup AutoCloseVim
     autocmd!
@@ -201,6 +259,32 @@ augroup AutoCloseVim
     " TODO: Close vim if all that remains is a no-name buffer
 augroup END
 
+
+" " After opening a file, set working dir to the same as that file so relative
+" " paths will work nicely. Pairs with the set of FZF mappings below to allow
+" " you to access files in the parent directories.
+" augroup SetWorkingDirForCurrentWindow
+    " autocmd!
+    " autocmd BufEnter * silent! lcd %:p:h
+" augroup END
+
+" Folding {{{
+
+augroup MakeFoldsPersistent
+    autocmd!
+    autocmd BufWinLeave * silent! mkview
+    autocmd BufWinEnter * silent! loadview
+augroup END
+
+augroup Folding
+    autocmd!
+    " TODO: What I really want is for this to apply to zshrc, vimrc and
+    " tmux.conf, not all vim and tmux fts. Should be included in a modeline
+    autocmd FileType vim,tmux setlocal foldmethod=marker foldcolumn=2
+    autocmd FileType python setlocal foldmethod=indent
+augroup END
+
+" END Folding }}}
 
 augroup RestoreCursorPositionWhenOpeningFile
     autocmd!
@@ -233,11 +317,27 @@ augroup SetCorrectFiletype
     autocmd BufRead,BufNewFile *.txt set filetype=text
 augroup END
 
+augroup GitCommitFormat
+    autocmd!
+    " Force the cursor onto a new line after 72 characters
+    autocmd FileType gitcommit set textwidth=72
+    " Colour the 73rd column so that we don’t type over our limit
+    set colorcolumn=+1
+    " Also colour the 51st column (for titles)
+    autocmd FileType gitcommit set colorcolumn+=51
+augroup END
+
 augroup MarkdownConcealing
     autocmd!
     autocmd FileType markdown set conceallevel=0
 augroup END
 
+augroup SpellcheckAndWritingTools
+    autocmd!
+    autocmd FileType markdown setlocal spell | call litecorrect#init()
+    autocmd FileType text setlocal spell | call litecorrect#init()
+    hi SpellBad cterm=underline ctermfg=red
+augroup END
 
 augroup NoPasteAfterLeavingInsertMode
     autocmd!
@@ -246,13 +346,254 @@ augroup END
 
 " tbh not sure if this should stay
 augroup coc-config
-let g:coc_global_extensions = [
-  \ 'coc-tsserver',
-  \ 'coc-python',
-  \ 'coc-texlab',
-  \ 'coc-emmet'
-  \ ]
+  autocmd!
+  " Setup formatexpr specified filetype(s).
+  autocmd FileType typescript,json setlocal formatexpr=CocAction('formatSelected')
+  " Update signature help on jump placeholder
+  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+augroup end
 
+" END AutoGroups- }}}
+
+" Functions {{{
+
+" Append modeline after last line in buffer
+function! AppendModeline() abort
+  let l:modeline = printf("# vim: ts=%d sw=%d tw=%d %set :",
+        \ &tabstop, &shiftwidth, &textwidth, &expandtab ? '' : 'no')
+  call append(line("$"), l:modeline)
+  doautocmd BufRead
+endfunction
+
+" Modeline for nasm files
+function! AppendASMModeline() abort
+let l:modeline = printf("; vim: ft=nasm ts=%d sw=%d tw=%d et :",
+        \ &tabstop, &shiftwidth, &textwidth)
+  call append(line("$"), l:modeline)
+  doautocmd BufRead
+endfunction
+
+" Rename current file (mirrors $ mv)
+function! RenameFile() abort
+  let old_name = expand('%')
+  let new_name = input('New file name: ', expand('%'), 'file')
+  if new_name != '' && new_name != old_name
+    exec ':saveas ' . new_name
+    exec ':!trash ' . old_name
+    redraw!
+  endif
+endfunction
+
+function! ToggleNerdTree() abort
+    :NERDTreeToggle
+    :AirlineRefresh
+endfunction
+
+" Cycle casing of selected text from upper to lower to title
+" https://vim.fandom.com/wiki/Switching_case_of_characters
+function! CycleCasing(str) abort
+  if a:str ==# toupper(a:str)
+    let result = tolower(a:str)
+  elseif a:str ==# tolower(a:str)
+    let result = substitute(a:str,'\(\<\w\+\>\)', '\u\1', 'g')
+  else
+    let result = toupper(a:str)
+  endif
+  return result
+endfunction
+
+" Open Markdown preview using grip
+" https://www.reddit.com/r/vim/comments/8asgjj/topnotch_vim_markdown_live_previews_with_no/
+function! OpenMarkdownPreview() abort
+  if exists('s:markdown_job_id') && s:markdown_job_id > 0
+    call jobstop(s:markdown_job_id)
+    unlet s:markdown_job_id
+  endif
+  let s:markdown_job_id = jobstart('grip ' . shellescape(expand('%:p')))
+  if s:markdown_job_id <= 0 | return | endif
+  call system('open http://localhost:6419')
+endfunction
+
+" https://github.com/stoeffel/.dotfiles/blob/master/vim/visual-at.vim
+function! ExecuteMacroOverVisualRange() abort
+  echo "@".getcmdline()
+  execute ":'<,'>normal @".nr2char(getchar())
+endfunction
+
+" END Functions }}}
+
+" Remappings {{{
+
+" Set , as leader and - as localleader
+let mapleader = ","
+let maplocalleader = "-"
+
+" Quickly edit important configs
+nnoremap <leader>ev :drop ~/.config/nvim/init.vim<cr>
+nnoremap <leader>sv :source ~/.vimrc<cr>:AirlineRefresh<cr>
+nnoremap <leader>et :drop ~/.tmux.conf<cr>
+nnoremap <leader>ez :drop ~/.zshrc<cr>
+
+" Make : commands easier
+nnoremap ; :
+
+" Insert timestamp
+iabbrev <expr> dts strftime("%a, %b %d, %Y -- %X")
+
+" Don't overwrite copy register when deleting with x or X
+nnoremap x "_x
+nnoremap X "_X
+
+" Read modeline
+nnoremap <leader>mr :doautocmd BufRead<Cr>
+
+" Yeet those 'Not an editor command' errors right out the fucking window
+" Or, defenestrate, as my Dad would say.
+command! WQ wq
+command! Wq wq
+command! W w
+command! Q q
+command! Qa qa
+
+" Make Y behave like C and D
+nnoremap Y y$
+
+" Make U do the opposite of u (redo)
+nnoremap U <C-r>
+
+" Make K split the current line at the cursor (the opposite of J)
+nnoremap K i<CR><Esc>
+
+" Save one chracter when saving, and only write if there are changes
+nnoremap <leader>w :up<CR>
+
+" Save and exit
+nnoremap <leader>x : x<CR>
+
+" Quite anyway
+nnoremap <leader>1 : q!<CR>
+
+" FZF mappings
+" Little hack to make this play nicely with setWorkingDirForCurrentWindow
+nnoremap <C-p> :Files<CR>
+nnoremap <C-p>. :Files ..<CR>
+nnoremap <C-p>.. :Files ../..<CR>
+nnoremap <C-p>... :Files ../../..<CR>
+nnoremap <leader>b :Buffers<CR>
+
+" Close buffers and windows more easily
+nnoremap <leader>q :bdelete<cr>
+nnoremap <leader>q! :bdelete!<cr>
+
+" Quickly select the text you just pasted
+noremap gV `[v`]
+
+" Automatically jump to end of pasted text
+" noremap <silent> p p`]
+" nnoremap <silent> p p`]
+
+" Create vertical split for help
+cabbrev hv vert h
+
+" Change word under cursor. Repeatable with . https://youtu.be/7Bx_mLDBtRc?t=130
+nnoremap c* *Ncgn
+
+" Quickly tabularize selected block
+vnoremap <leader>t :Tabularize / \|<cr>
+
+" Dictionary (definition) lookup
+nnoremap <leader>D :Dict<cr>
+vnoremap <leader>D :Dict<cr>
+
+" Distraction Free Mode
+nnoremap <silent> <leader>z :Goyo<cr>
+
+" Traverse buffer list more easily.
+nnoremap <leader>h :bprevious<CR>
+nnoremap <leader>l :bnext<CR>
+
+" Switch between the last two files
+nnoremap <leader><leader> <c-^>
+
+" Easily move between panes
+nnoremap <silent> <C-h> <C-w>h
+vnoremap <silent> <C-h> <C-w>h
+nnoremap <silent> <C-j> <C-w>j
+vnoremap <silent> <C-j> <C-w>j
+nnoremap <silent> <C-k> <C-w>k
+vnoremap <silent> <C-k> <C-w>k
+nnoremap <silent> <C-l> <C-w>l
+vnoremap <silent> <C-l> <C-w>l
+
+" Move the current line above or below with ALT + [j/k].
+" TODO: Make this not fail on top or bottom of file
+noremap <A-j> ddjP
+noremap <A-k> ddkP
+
+" Make j and k operate on virtual lines, not real lines.
+nnoremap j gj
+vnoremap j gj
+nnoremap k gk
+vnoremap k gk
+
+" Make arrow keys also work on virtual lines
+noremap  <buffer> <silent> <Up>   gk
+noremap  <buffer> <silent> <Down> gj
+inoremap <buffer> <silent> <Up>   <C-o>gk
+inoremap <buffer> <silent> <Down> <C-o>gj
+
+" Auto center on matched string.
+noremap n nzz
+noremap N Nzz
+
+" Quickly close Quickfix and Location Windows
+nnoremap <script> <silent> <leader>tl :lclose<CR>
+nnoremap <script> <silent> <leader>tq :cclose<CR>
+
+" Jump to anywhere on screen with minimal keystrokes `s{char}{char}{label}`
+nmap s <Plug>(easymotion-overwin-f2)
+
+" Toggle spell check
+nnoremap <silent> <leader>s :set spell!<CR>
+
+" Toggle file browser, undotree and Vista tagbar
+nnoremap <leader>u :UndotreeToggle<cr>
+nnoremap <space> :call ToggleNerdTree()<CR>
+nnoremap <Leader>v :Vista!!<CR>
+
+" Turn off search highlighting
+nnoremap <Leader>/ :noh<CR>
+
+" Markdown Preview
+nnoremap <silent> <leader>mpg :call OpenMarkdownPreview()<cr>
+nnoremap <silent> <leader>mpp :Pandoc pdf<cr>
+
+" Cycle casing of selected text
+vnoremap <c-u> y:call setreg('', CycleCasing(@"), getregtype(''))<CR>gv""Pgv
+
+" Run macro over visual range with @REG
+xnoremap @ :<C-u>call ExecuteMacroOverVisualRange()<CR>
+
+" Remappings }}}
+
+" Writing {{{
+
+" Note that this dictionary is purely for spelling correction and does not
+" allow you to look up definitions. That's why I have the vim-dict plugin.
+set dictionary+=/usr/share/dict/words
+set thesaurus+=~/.vim/thesaurus/mthesaur.txt
+
+" END Writing }}}
+
+" coc.nvim {{{
+" Heavily based on: https://github.com/neoclide/coc.nvim#example-vim-configuration
+
+" https://github.com/neoclide/coc.nvim/issues/856
+let g:coc_node_path = "/bin/node"
+
+" Use tab for trigger completion with characters ahead and navigate.
+" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
@@ -260,6 +601,14 @@ inoremap <silent><expr> <TAB>
       \ pumvisible() ? "\<C-n>" :
       \ <SID>check_back_space() ? "\<TAB>" :
       \ coc#refresh()
+
+" TODO: Use tab to trigger completion with support for snippets.
+" inoremap <silent><expr> <TAB>
+      " \ pumvisible() ? coc#_select_confirm() :
+      " \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+      " \ <SID>check_back_space() ? "\<TAB>" :
+      " \ coc#refresh()
+
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
 function! s:check_back_space() abort
@@ -267,18 +616,16 @@ function! s:check_back_space() abort
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
-" Use <c-space> to trigger completion.
-inoremap <silent><expr> <c-space> coc#refresh()
+" Use <M-space> to trigger completion.
+inoremap <silent><expr> <M-space> coc#refresh()
 
 " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
 " Coc only does snippet and additional edit on confirm.
 inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-" Or use `complete_info` if your vim support it, like:
-" inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
 
-" Use `[g` and `]g` to navigate diagnostics
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
+" Use <Tab> and <S-Tab> to navigate the completion list
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
 " Remap keys for gotos
 nmap <silent> gd <Plug>(coc-definition)
@@ -286,8 +633,27 @@ nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 
-" Use K to show documentation in preview window
-nnoremap <silent> K :call <SID>show_documentation()<CR>
+" TODO: Snippets {{{
+
+" " Use <C-l> to trigger snippet expand.
+" imap <C-l> <Plug>(coc-snippets-expand)
+"
+" " Use <C-j> to select text for visual placeholder of snippet.
+" vmap <C-j> <Plug>(coc-snippets-select)
+"
+" " Jump to next placeholder.
+" let g:coc_snippet_next = '<c-k>'
+"
+" " Jump to previous placeholder.
+" let g:coc_snippet_prev = '<c-j>'
+"
+" " Use <C-j> to both expand and jump (make expand higher priority.)
+" imap <C-j> <Plug>(coc-snippets-expand-jump)
+
+" END Snippets }}}
+
+" Use H to show documentation in preview window
+nnoremap <silent> H :call <SID>show_documentation()<CR>
 
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
@@ -300,156 +666,171 @@ endfunction
 " Highlight symbol under cursor on CursorHold
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
-" Remap for rename current word
+" Mapping for rename current word
 nmap <leader>rn <Plug>(coc-rename)
 
-" Remap for format selected region
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
+" Mapping for format selected region
+xmap <leader>f <Plug>(coc-format-selected)
+nmap <leader>f <Plug>(coc-format-selected)
 
-augroup mygroup
-  autocmd!
-  " Setup formatexpr specified filetype(s).
-  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
-  " Update signature help on jump placeholder
-  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-augroup end
+" Mapping for do codeAction of selected region, ex: `<leader>aap` for current paragraph
+xmap <leader>a <Plug>(coc-codeaction-selected)
+nmap <leader>a <Plug>(coc-codeaction-selected)
 
-" Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
-xmap <leader>a  <Plug>(coc-codeaction-selected)
-nmap <leader>a  <Plug>(coc-codeaction-selected)
-
-" Remap for do codeAction of current line
-nmap <leader>ac  <Plug>(coc-codeaction)
+" Mapping for do codeAction of current line
+nmap <leader>ac <Plug>(coc-codeaction)
 " Fix autofix problem of current line
-nmap <leader>qf  <Plug>(coc-fix-current)
-
-" Create mappings for function text object, requires document symbols feature of languageserver.
-xmap if <Plug>(coc-funcobj-i)
-xmap af <Plug>(coc-funcobj-a)
-omap if <Plug>(coc-funcobj-i)
-omap af <Plug>(coc-funcobj-a)
-
-" Use <C-d> for select selections ranges, needs server support, like: coc-tsserver, coc-python
-nmap <silent> <C-d> <Plug>(coc-range-select)
-xmap <silent> <C-d> <Plug>(coc-range-select)
+nmap <leader>qf <Plug>(coc-fix-current)
 
 " Use `:Format` to format current buffer
 command! -nargs=0 Format :call CocAction('format')
 
 " Use `:Fold` to fold current buffer
-command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+command! -nargs=? Fold :call CocAction('fold', <f-args>)
 
-" use `:OR` for organize import of current buffer
-command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
-
-" Add status line support, for integration with other plugin, checkout `:h coc-status`
-set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
-
-" Using CocList
-" Show all diagnostics
-nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
-" Manage extensions
-nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
-" Show commands
-nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
-" Find symbol of current document
-nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
-" Search workspace symbols
-nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
-" Do default action for next item.
-nnoremap <silent> <space>j  :<C-u>CocNext<CR>
-" Do default action for previous item.
-nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
-" Resume latest coc list
-nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+" END coc.nvim }}}
 
 
-" Functions
-function! ToggleNerdTree() abort
-    :NERDTreeToggle
-    :AirlineRefresh
+" TODO: Ultisnips {{{
+
+" https://github.com/SirVer/ultisnips/issues/1052#issuecomment-504719268
+" let g:UltiSnipsExpandTrigger = "<nop>"
+" let g:UltiSnipsJumpForwardTrigger = "<tab>"
+" let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
+
+" END Ultisnips }}}
+
+" Markdown {{{
+
+" Pandoc {{{
+
+" vim-pandoc {{{
+
+let g:pandoc#filetypes#handled = ["pandoc", "markdown"]
+let g:pandoc#filetypes#pandoc_markdown = 0
+
+" END vim-pandoc }}}
+
+" vim-pandoc-syntax {{{
+
+let g:pandoc#syntax#conceal#urls = 0
+let g:pandoc#syntax#conceal#blacklist = [ "codeblock_start", "codeblock_delim", "image", "block" ]
+let g:pandoc#modules#disabled = ["folding"]
+let g:pandoc#syntax#codeblocks#embeds#langs = [ "python", "ruby", "c", "bash=sh" ]
+
+" END vim-pandoc-syntax }}}
+
+" END pandoc }}}
+
+" END Markdown }}}
+
+" fzf {{{
+
+" https://github.com/neovim/neovim/issues/9718#issuecomment-546603628
+function! CreateCenteredFloatingWindow()
+    let width = min([&columns - 4, max([80, &columns - 20])])
+    let height = min([&lines - 4, max([20, &lines - 10])])
+    let top = ((&lines - height) / 2) - 1
+    let left = (&columns - width) / 2
+    let opts = {'relative': 'editor', 'row': top, 'col': left, 'width': width, 'height': height, 'style': 'minimal'}
+
+    let top = "╭" . repeat("─", width - 2) . "╮"
+    let mid = "│" . repeat(" ", width - 2) . "│"
+    let bot = "╰" . repeat("─", width - 2) . "╯"
+    let lines = [top] + repeat([mid], height - 2) + [bot]
+    let s:buf = nvim_create_buf(v:false, v:true)
+    call nvim_buf_set_lines(s:buf, 0, -1, v:true, lines)
+    call nvim_open_win(s:buf, v:true, opts)
+    set winhl=Normal:Floating
+    let opts.row += 1
+    let opts.height -= 2
+    let opts.col += 2
+    let opts.width -= 4
+    call nvim_open_win(nvim_create_buf(v:false, v:true), v:true, opts)
+    au BufWipeout <buffer> exe 'bw '.s:buf
 endfunction
 
+let g:fzf_layout = { 'window': 'call CreateCenteredFloatingWindow()' }
 
-" === Remappings
-" Set , as leader and - as localleader
-let mapleader = ","
-
-" Quickly edit important configs
-nnoremap <leader>ev :drop ~/.config/nvim/init.vim<cr>
-nnoremap <leader>et :drop ~/.tmux.conf<cr>
-nnoremap <leader>ez :drop ~/.zshrc<cr>
+" END fzf }}}
 
 
-" Split window
-nmap ss :split<Return><C-w>
-nmap sv :vsplit<Return><C-w>
+" Undotree {{{
 
-" Switch window
-map sh <C-w>h
-map sk <C-w>k
-map sj <C-w>j
-map sl <C-w>l
-
-
-nmap - :tabprev<Return>
-nmap = :tabnext<Return>
-
-
-command! WQ wq
-command! Wq wq
-command! W w
-command! Q q
-command! Qa qa
-
-
-" Make U do the opposite of u (redo)
-nnoremap U <C-r>
-
-" Save one chracter when saving, and only write if there are changes
-nnoremap <leader>w : w<CR>
-
-" Exit from close file quickli
-nnoremap <leader>q : q!<CR>
-
-" Exit from close file quickli
-nnoremap <leader>x :x<CR>
-
-nnoremap <leader>te :tabnew<cr>
-
-" FZF mappings
-nnoremap <C-p> :Files<CR>
-nnoremap <C-p>. :Files ..<CR>
-nnoremap <C-p>.. :Files ../..<CR>
-nnoremap <C-p>... :Files ../../..<CR>
-
-" Check File buffers
-nnoremap <leader>b :Buffers<CR>
-
-" Toggle file browser, undotree and Vista tagbar
-nnoremap <leader> u :UndotreeToggle<cr>
-nnoremap <space> : NERDTree<CR>
-nnoremap <Leader> v :Vista!!<CR>
-
-" Goyo
-nnoremap <silent> <leader>G :Goyo<cr>
-
- " Undotree
 let g:undotree_SetFocusWhenToggle = 1
 
+" END Undotree }}}
 
-" NERDTree
+" NERDTree {{{
+
 let NERDTreeShowHidden = 1
 let NERDTreeStatusline = 0
 
+" END NERDTree }}}
 
-" vim-easymotion
+" vim-easymotion {{{
+
+" Turn on case insensitive feature
 let g:EasyMotion_smartcase = 1
 
+" END vim-easymotion }}}
 
-" vim-airline
+" Better Whitespace {{{
+"
+let g:better_whitespace_enabled=1
+let g:strip_whitespace_on_save=1
+let g:better_whitespace_skip_empty_lines=1
+let g:show_spaces_that_precede_tabs=1
+
+" END Better Whitespace }}}
+
+" vim-airline {{{
+
 let g:airline_theme='onedark'
+" let g:airline_theme='gruvbox_material'
 let g:airline_powerline_fonts = 1
+" Enable the list of buffers
 let g:airline#extensions#tabline#enabled = 1
+" Show just the filename
 let g:airline#extensions#tabline#fnamemod = ':t'
+
+" END Airline }}}
+
+" NerdCommenter {{{
+
+" Add spaces after comment delimiters
+let g:NERDSpaceDelims = 1
+" Allow commenting and inverting empty lines (useful when commenting a region)
+let g:NERDCommentEmptyLines = 1
+" Trim trailing whitespace when uncommenting
+let g:NERDTrimTrailingWhitespace = 1
+
+" NerdCommenter }}}
+
+" Bullets.vim {{{
+
+let g:bullets_enabled_file_types = [
+            \ 'markdown',
+            \ 'pandoc',
+            \ 'text',
+            \ 'gitcommit',
+            \ 'scratch'
+            \]
+
+" END Bullets.vim }}}
+
+
+" Python {{{
+
+let python_highlight_all=1
+let g:python3_host_prog = '/usr/local/bin/python3'
+let g:python_host_prog = '/usr/local/bin/python2'
+
+" END Python }}}
+
+" Gist {{{
+
+let g:gist_detect_filetype = 1
+let g:gist_clip_command = 'pbcopy'
+
+" END Gist }}}

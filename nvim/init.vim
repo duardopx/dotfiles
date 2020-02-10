@@ -1,9 +1,3 @@
-" .vimrc for Neovim on macOS using iTerm2
-" Written by: Aaron Lichtman (and the internet)
-
-" I've spent 10,000 fucking hours on this thing. I hope someone else gets some
-" use out of this.
-
 
 " Plugins {{{
 
@@ -14,6 +8,7 @@ Plug 'mattn/webapi-vim'
 
 " Syntax Highlighting, Linting and Completion
 Plug 'sheerun/vim-polyglot'
+Plug 'vim-syntastic/syntastic'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " Snippets
@@ -75,6 +70,8 @@ Plug 'jremmen/vim-ripgrep'
 " Quick Jump
 Plug 'easymotion/vim-easymotion'
 
+" Persistent Scratch Buffers
+Plug 'mtth/scratch.vim'
 
 " Commenting
 Plug 'scrooloose/nerdcommenter'
@@ -160,14 +157,14 @@ set nolinebreak
 set breakindent
 set breakindentopt=min:40
 highlight ColorColumn ctermbg=237
-set colorcolumn=81   " 80 character guidelines
+set colorcolumn=81,121   " 80 and 120 character guidelines
 
 " END Line breaking }}}
 
 " Show “invisible” characters
 " TODO: Show leading spaces.
 set list
-set listchars=tab:▸\ ,trail:·,eol:¬,nbsp:_
+set listchars=tab:▸\ ,trail:·,nbsp:_
 " set listchars=tab:→\ ,trail:·,eol:¬,nbsp:_
 
 " Indentation {{{
@@ -190,7 +187,7 @@ set autoindent          " copy indent from current line when starting a new line
 
 set termguicolors
 set background=dark
-let g:gruvbox_contrast_dark = 'hard'
+let g:gruvbox_contrast_dark='hard'
 colorscheme gruvbox
 
 
@@ -198,35 +195,7 @@ colorscheme gruvbox
 set fillchars+=vert:┃
 highlight VertSplit guifg=9
 
-" Make search highlighting tolerable
-" hi Search ctermbg=9
-" hi Search ctermfg=Red
 
-" TODO: Fix this mess
-" let g:thematic#theme_name = 'gruvbox-material'
-"
-" let g:thematic#defaults = {
-" \ 'airline-theme': 'onedark',
-" \ }
-"
-" " TODO: Resolve airline-theme change bug on source vimrc
-" let g:thematic#themes = {
-" \ 'gruvbox-material' : {
-" \              "airline-theme": 'onedark',
-" \ },
-" \ }
-"
-" " let g:thematic#themes = {
-" " \ 'snow'  : {},
-" " \ 'gruvbox' : {
-" " \              'airline-theme': 'onedark',
-" " \ },
-" " \ 'gruvbox-material' : {
-" " \              'airline-theme': 'onedark',
-" " \ },
-" " \ 'onedark' : {},
-" " \ 'OceanicNext' : {},
-" " \ }
 
 " Vim Dev Icons {{{
 
@@ -260,13 +229,6 @@ augroup AutoCloseVim
 augroup END
 
 
-" " After opening a file, set working dir to the same as that file so relative
-" " paths will work nicely. Pairs with the set of FZF mappings below to allow
-" " you to access files in the parent directories.
-" augroup SetWorkingDirForCurrentWindow
-    " autocmd!
-    " autocmd BufEnter * silent! lcd %:p:h
-" augroup END
 
 " Folding {{{
 
@@ -357,14 +319,6 @@ augroup end
 
 " Functions {{{
 
-" Append modeline after last line in buffer
-function! AppendModeline() abort
-  let l:modeline = printf("# vim: ts=%d sw=%d tw=%d %set :",
-        \ &tabstop, &shiftwidth, &textwidth, &expandtab ? '' : 'no')
-  call append(line("$"), l:modeline)
-  doautocmd BufRead
-endfunction
-
 " Modeline for nasm files
 function! AppendASMModeline() abort
 let l:modeline = printf("; vim: ft=nasm ts=%d sw=%d tw=%d et :",
@@ -389,37 +343,6 @@ function! ToggleNerdTree() abort
     :AirlineRefresh
 endfunction
 
-" Cycle casing of selected text from upper to lower to title
-" https://vim.fandom.com/wiki/Switching_case_of_characters
-function! CycleCasing(str) abort
-  if a:str ==# toupper(a:str)
-    let result = tolower(a:str)
-  elseif a:str ==# tolower(a:str)
-    let result = substitute(a:str,'\(\<\w\+\>\)', '\u\1', 'g')
-  else
-    let result = toupper(a:str)
-  endif
-  return result
-endfunction
-
-" Open Markdown preview using grip
-" https://www.reddit.com/r/vim/comments/8asgjj/topnotch_vim_markdown_live_previews_with_no/
-function! OpenMarkdownPreview() abort
-  if exists('s:markdown_job_id') && s:markdown_job_id > 0
-    call jobstop(s:markdown_job_id)
-    unlet s:markdown_job_id
-  endif
-  let s:markdown_job_id = jobstart('grip ' . shellescape(expand('%:p')))
-  if s:markdown_job_id <= 0 | return | endif
-  call system('open http://localhost:6419')
-endfunction
-
-" https://github.com/stoeffel/.dotfiles/blob/master/vim/visual-at.vim
-function! ExecuteMacroOverVisualRange() abort
-  echo "@".getcmdline()
-  execute ":'<,'>normal @".nr2char(getchar())
-endfunction
-
 " END Functions }}}
 
 " Remappings {{{
@@ -429,7 +352,7 @@ let mapleader = ","
 let maplocalleader = "-"
 
 " Quickly edit important configs
-nnoremap <leader>ev :drop ~/.config/nvim/init.vim<cr>
+nnoremap <leader>ev :drop ~/.vimrc<cr>
 nnoremap <leader>sv :source ~/.vimrc<cr>:AirlineRefresh<cr>
 nnoremap <leader>et :drop ~/.tmux.conf<cr>
 nnoremap <leader>ez :drop ~/.zshrc<cr>
@@ -437,8 +360,6 @@ nnoremap <leader>ez :drop ~/.zshrc<cr>
 " Make : commands easier
 nnoremap ; :
 
-" Insert timestamp
-iabbrev <expr> dts strftime("%a, %b %d, %Y -- %X")
 
 " Don't overwrite copy register when deleting with x or X
 nnoremap x "_x
@@ -455,9 +376,6 @@ command! W w
 command! Q q
 command! Qa qa
 
-" Make Y behave like C and D
-nnoremap Y y$
-
 " Make U do the opposite of u (redo)
 nnoremap U <C-r>
 
@@ -466,12 +384,6 @@ nnoremap K i<CR><Esc>
 
 " Save one chracter when saving, and only write if there are changes
 nnoremap <leader>w :up<CR>
-
-" Save and exit
-nnoremap <leader>x : x<CR>
-
-" Quite anyway
-nnoremap <leader>1 : q!<CR>
 
 " FZF mappings
 " Little hack to make this play nicely with setWorkingDirForCurrentWindow
@@ -512,8 +424,6 @@ nnoremap <silent> <leader>z :Goyo<cr>
 nnoremap <leader>h :bprevious<CR>
 nnoremap <leader>l :bnext<CR>
 
-" Switch between the last two files
-nnoremap <leader><leader> <c-^>
 
 " Easily move between panes
 nnoremap <silent> <C-h> <C-w>h
@@ -558,21 +468,11 @@ nnoremap <silent> <leader>s :set spell!<CR>
 
 " Toggle file browser, undotree and Vista tagbar
 nnoremap <leader>u :UndotreeToggle<cr>
-nnoremap <space> :call ToggleNerdTree()<CR>
+nnoremap <C-n> :call ToggleNerdTree()<CR>
 nnoremap <Leader>v :Vista!!<CR>
 
 " Turn off search highlighting
 nnoremap <Leader>/ :noh<CR>
-
-" Markdown Preview
-nnoremap <silent> <leader>mpg :call OpenMarkdownPreview()<cr>
-nnoremap <silent> <leader>mpp :Pandoc pdf<cr>
-
-" Cycle casing of selected text
-vnoremap <c-u> y:call setreg('', CycleCasing(@"), getregtype(''))<CR>gv""Pgv
-
-" Run macro over visual range with @REG
-xnoremap @ :<C-u>call ExecuteMacroOverVisualRange()<CR>
 
 " Remappings }}}
 
@@ -602,13 +502,6 @@ inoremap <silent><expr> <TAB>
       \ <SID>check_back_space() ? "\<TAB>" :
       \ coc#refresh()
 
-" TODO: Use tab to trigger completion with support for snippets.
-" inoremap <silent><expr> <TAB>
-      " \ pumvisible() ? coc#_select_confirm() :
-      " \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
-      " \ <SID>check_back_space() ? "\<TAB>" :
-      " \ coc#refresh()
-
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
 function! s:check_back_space() abort
@@ -632,25 +525,6 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
-
-" TODO: Snippets {{{
-
-" " Use <C-l> to trigger snippet expand.
-" imap <C-l> <Plug>(coc-snippets-expand)
-"
-" " Use <C-j> to select text for visual placeholder of snippet.
-" vmap <C-j> <Plug>(coc-snippets-select)
-"
-" " Jump to next placeholder.
-" let g:coc_snippet_next = '<c-k>'
-"
-" " Jump to previous placeholder.
-" let g:coc_snippet_prev = '<c-j>'
-"
-" " Use <C-j> to both expand and jump (make expand higher priority.)
-" imap <C-j> <Plug>(coc-snippets-expand-jump)
-
-" END Snippets }}}
 
 " Use H to show documentation in preview window
 nnoremap <silent> H :call <SID>show_documentation()<CR>
@@ -689,16 +563,6 @@ command! -nargs=0 Format :call CocAction('format')
 command! -nargs=? Fold :call CocAction('fold', <f-args>)
 
 " END coc.nvim }}}
-
-
-" TODO: Ultisnips {{{
-
-" https://github.com/SirVer/ultisnips/issues/1052#issuecomment-504719268
-" let g:UltiSnipsExpandTrigger = "<nop>"
-" let g:UltiSnipsJumpForwardTrigger = "<tab>"
-" let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
-
-" END Ultisnips }}}
 
 " Markdown {{{
 
@@ -753,7 +617,6 @@ endfunction
 let g:fzf_layout = { 'window': 'call CreateCenteredFloatingWindow()' }
 
 " END fzf }}}
-
 
 " Undotree {{{
 
@@ -818,7 +681,6 @@ let g:bullets_enabled_file_types = [
             \]
 
 " END Bullets.vim }}}
-
 
 " Python {{{
 

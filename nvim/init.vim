@@ -8,7 +8,6 @@ Plug 'mattn/webapi-vim'
 
 " Syntax Highlighting, Linting and Completion
 Plug 'sheerun/vim-polyglot'
-Plug 'vim-syntastic/syntastic'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " Snippets
@@ -54,6 +53,7 @@ Plug 'jiangmiao/auto-pairs'
 Plug 'tpope/vim-surround'
 
 " Git and GitHub
+Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-fugitive'
 Plug 'mattn/gist-vim'
 
@@ -165,7 +165,7 @@ set colorcolumn=81,121   " 80 and 120 character guidelines
 " TODO: Show leading spaces.
 set list
 set listchars=tab:▸\ ,trail:·,nbsp:_
-" set listchars=tab:→\ ,trail:·,eol:¬,nbsp:_
+" set listchars=tab:▸\ ,trail:·,eol:¬,nbsp:_
 
 " Indentation {{{
 
@@ -193,7 +193,7 @@ colorscheme gruvbox
 
 " Make vertical splits prettier
 set fillchars+=vert:┃
-highlight VertSplit guifg=9
+highlight VertSplit guifg=11
 
 
 
@@ -228,25 +228,6 @@ augroup AutoCloseVim
     " TODO: Close vim if all that remains is a no-name buffer
 augroup END
 
-
-
-" Folding {{{
-
-augroup MakeFoldsPersistent
-    autocmd!
-    autocmd BufWinLeave * silent! mkview
-    autocmd BufWinEnter * silent! loadview
-augroup END
-
-augroup Folding
-    autocmd!
-    " TODO: What I really want is for this to apply to zshrc, vimrc and
-    " tmux.conf, not all vim and tmux fts. Should be included in a modeline
-    autocmd FileType vim,tmux setlocal foldmethod=marker foldcolumn=2
-    autocmd FileType python setlocal foldmethod=indent
-augroup END
-
-" END Folding }}}
 
 augroup RestoreCursorPositionWhenOpeningFile
     autocmd!
@@ -352,8 +333,7 @@ let mapleader = ","
 let maplocalleader = "-"
 
 " Quickly edit important configs
-nnoremap <leader>ev :drop ~/.vimrc<cr>
-nnoremap <leader>sv :source ~/.vimrc<cr>:AirlineRefresh<cr>
+nnoremap <leader>ev :drop ~/.config/nvim/init.vim<cr>
 nnoremap <leader>et :drop ~/.tmux.conf<cr>
 nnoremap <leader>ez :drop ~/.zshrc<cr>
 
@@ -387,25 +367,28 @@ nnoremap <leader>w :up<CR>
 
 " FZF mappings
 " Little hack to make this play nicely with setWorkingDirForCurrentWindow
-nnoremap <C-p> :Files<CR>
+nnoremap <C-p> :GFiles<CR>
 nnoremap <C-p>. :Files ..<CR>
 nnoremap <C-p>.. :Files ../..<CR>
-nnoremap <C-p>... :Files ../../..<CR>
 nnoremap <leader>b :Buffers<CR>
 
 " Close buffers and windows more easily
 nnoremap <leader>q :bdelete<cr>
 nnoremap <leader>q! :bdelete!<cr>
 
-" Quickly select the text you just pasted
-noremap gV `[v`]
+ " Git Mappings
 
-" Automatically jump to end of pasted text
-" noremap <silent> p p`]
-" nnoremap <silent> p p`]
+" Open selection on github
+nnoremap go :.Gbrowse<CR>
+vnoremap go :'<,'>.Gbrowse<CR>
 
-" Create vertical split for help
-cabbrev hv vert h
+nnoremap ga :Gwrite<CR>
+nnoremap gc :Git commit --verbose<CR>
+nnoremap gl :Gpull<CR>
+nnoremap gmv :Gmove<CR>
+nnoremap gp :Gpush<CR>
+nnoremap gs :Gstatus<CR>
+
 
 " Change word under cursor. Repeatable with . https://youtu.be/7Bx_mLDBtRc?t=130
 nnoremap c* *Ncgn
@@ -421,9 +404,9 @@ vnoremap <leader>D :Dict<cr>
 nnoremap <silent> <leader>z :Goyo<cr>
 
 " Traverse buffer list more easily.
-nnoremap <leader>h :bprevious<CR>
-nnoremap <leader>l :bnext<CR>
-
+"nnoremap <leader>h :bprevious<CR>
+nnoremap < :bprevious<CR>
+nnoremap > :bnext<CR>
 
 " Easily move between panes
 nnoremap <silent> <C-h> <C-w>h
@@ -437,20 +420,19 @@ vnoremap <silent> <C-l> <C-w>l
 
 " Move the current line above or below with ALT + [j/k].
 " TODO: Make this not fail on top or bottom of file
-noremap <A-j> ddjP
 noremap <A-k> ddkP
 
-" Make j and k operate on virtual lines, not real lines.
-nnoremap j gj
-vnoremap j gj
-nnoremap k gk
-vnoremap k gk
+" " Make j and k operate on virtual lines, not real lines.
+" nnoremap j gj
+" vnoremap j gj
+" nnoremap k gk
+" vnoremap k gk
 
-" Make arrow keys also work on virtual lines
-noremap  <buffer> <silent> <Up>   gk
-noremap  <buffer> <silent> <Down> gj
-inoremap <buffer> <silent> <Up>   <C-o>gk
-inoremap <buffer> <silent> <Down> <C-o>gj
+" " Make arrow keys also work on virtual lines
+" noremap  <buffer> <silent> <Up>   gk
+" noremap  <buffer> <silent> <Down> gj
+" inoremap <buffer> <silent> <Up>   <C-o>gk
+" inoremap <buffer> <silent> <Down> <C-o>gj
 
 " Auto center on matched string.
 noremap n nzz
@@ -685,8 +667,8 @@ let g:bullets_enabled_file_types = [
 " Python {{{
 
 let python_highlight_all=1
-let g:python3_host_prog = '/usr/local/bin/python3'
-let g:python_host_prog = '/usr/local/bin/python2'
+let g:python3_host_prog = '/bin/python3'
+let g:python_host_prog = '/bin/python2'
 
 " END Python }}}
 

@@ -15,17 +15,18 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 " Plug 'honza/vim-snippets'
 
 " File explorers
-Plug 'scrooloose/nerdtree'
+Plug 'scloose/nerdtree'
 
 " fzf
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
 " Writing-related
-Plug 'reedes/vim-litecorrect'
 Plug 'szw/vim-dict'
 Plug 'junegunn/goyo.vim'
 Plug 'amix/vim-zenroom2'
+Plug 'junegunn/limelight.vim'
+Plug 'reedes/vim-litecorrect'
 
 " Themes
 Plug 'gruvbox-community/gruvbox'
@@ -42,8 +43,6 @@ Plug 'junegunn/vim-peekaboo'
 
 " Markdown
 Plug 'godlygeek/tabular'
-Plug 'dkarter/bullets.vim'
-Plug 'vim-pandoc/vim-pandoc'
 Plug 'vim-pandoc/vim-pandoc-syntax'
 
 " Delimiters
@@ -57,6 +56,10 @@ Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-fugitive'
 Plug 'mattn/gist-vim'
 
+" Automatically resize windows
+Plug 'camspiers/animate.vim'
+Plug 'camspiers/lens.vim'
+
 " File Scrolling
 Plug 'psliwka/vim-smoothie'
 
@@ -69,9 +72,6 @@ Plug 'jremmen/vim-ripgrep'
 
 " Quick Jump
 Plug 'easymotion/vim-easymotion'
-
-" Persistent Scratch Buffers
-Plug 'mtth/scratch.vim'
 
 " Commenting
 Plug 'scrooloose/nerdcommenter'
@@ -94,26 +94,26 @@ runtime macros/matchit.vim
 set secure
 set modeline
 set spelllang=en
-set mouse=nv                    " Use mouse for pane selection, resizing, and cursor movement.
-set nostartofline               " Don’t reset cursor to start of line when moving around.
-set title                       " Show the filename in the window titlebar
-set autoread                    " Autoread changed files
-set clipboard=unnamed           " Enable copying to macOS clipboard
-set noshowmode                  " Don't show mode under statusline w/ mode
-set scrolloff=6                 " Minimal num of lines to keep above/below cursor
-set number                      " Enable line numbers
-set cmdheight=1                 " Better display for messages
-set updatetime=300              " Smaller updatetime for CursorHold & CursorHoldI
-set cursorline                  " Highlight current line
-set hidden                      " Enable buffers to exist in the background
-set nobackup                    " Don't keep a backup file. writebackup is enough for my purposes.
-set splitbelow                  " Open new horizontal splits to the bottom
-set splitright                  " And vertical splits to the right
-set signcolumn=yes              " Always show signcolumns
-set switchbuf=usetab            " Search first in opened windows if opening buffer
-set shortmess+=c                " Don't give ins-completion-menu messages
-set backspace=indent,eol,start  " Make delete in insert mode behave as expected.
-set fillchars+=fold:.           " Make folds pretty.
+set mouse=nv
+set nostartofline
+set title
+set autoread
+set clipboard=unnamed
+set noshowmode
+set scrolloff=6
+set number
+set cmdheight=1
+set updatetime=300
+set cursorline
+set hidden
+set nobackup
+set splitbelow
+set splitright
+set signcolumn=yes
+set switchbuf=usetab
+set shortmess+=c
+set backspace=indent,eol,start
+set fillchars+=fold:.
 syntax on
 
 " Tab completion menu
@@ -123,7 +123,7 @@ set wildignore+=.svn,CVS,.git,*.pyc,*.o,*.a,*.class,*.mo,*.la,*.so,*.obj,*.swp,*
 
 " Undo {{{
 
-set undolevels=1000  " store a bunch of undo history
+set undolevels=1000
 set undofile
 
 " END Undo }}}
@@ -139,13 +139,13 @@ set iskeyword+=_
 
 " Search {{{
 
-set showmatch             " Show matching brackets/parenthesis
-set matchtime=0           " Don't blink when matching
-set incsearch             " Find as you type search
-set hlsearch              " Highlight search terms
-set ignorecase            " Case insensitive search
-set inccommand=nosplit    " Show regex replacement changes as you're typing
-set smartcase             " Case sensitive if we type an uppercase
+set showmatch
+set matchtime=0
+set incsearch
+set hlsearch
+set ignorecase
+set inccommand=nosplit
+set smartcase
 
 " END Search }}}
 
@@ -153,19 +153,16 @@ set smartcase             " Case sensitive if we type an uppercase
 
 set wrap
 set nolinebreak
-" set textwidth=120       " TODO: break lines when line length increases only outside of markdown and text files
 set breakindent
 set breakindentopt=min:40
 highlight ColorColumn ctermbg=237
-set colorcolumn=81,121   " 80 and 120 character guidelines
+set colorcolumn=81,121
 
 " END Line breaking }}}
 
 " Show “invisible” characters
-" TODO: Show leading spaces.
 set list
 set listchars=tab:▸\ ,trail:·,nbsp:_
-" set listchars=tab:▸\ ,trail:·,eol:¬,nbsp:_
 
 " Indentation {{{
 
@@ -173,11 +170,11 @@ set copyindent
 set preserveindent
 filetype plugin indent on
 
-set expandtab           " enter spaces when tab is pressed
-set tabstop=4           " use 4 spaces to represent tab
+set expandtab
+set tabstop=4
 set softtabstop=4
-set shiftwidth=4        " number of spaces to use for auto indent
-set autoindent          " copy indent from current line when starting a new lineet noexpandtab
+set shiftwidth=4
+set autoindent
 
 " END Indentation }}}
 
@@ -374,7 +371,6 @@ nnoremap <leader>b :Buffers<CR>
 
 " Close buffers and windows more easily
 nnoremap <leader>q :bdelete<cr>
-nnoremap <leader>q! :bdelete!<cr>
 
  " Git Mappings
 
@@ -403,50 +399,29 @@ vnoremap <leader>D :Dict<cr>
 " Distraction Free Mode
 nnoremap <silent> <leader>z :Goyo<cr>
 
+
 " Traverse buffer list more easily.
 "nnoremap <leader>h :bprevious<CR>
 nnoremap < :bprevious<CR>
 nnoremap > :bnext<CR>
 
 " Easily move between panes
-nnoremap <silent> <C-h> <C-w>h
-vnoremap <silent> <C-h> <C-w>h
-nnoremap <silent> <C-j> <C-w>j
-vnoremap <silent> <C-j> <C-w>j
-nnoremap <silent> <C-k> <C-w>k
-vnoremap <silent> <C-k> <C-w>k
-nnoremap <silent> <C-l> <C-w>l
-vnoremap <silent> <C-l> <C-w>l
+nnoremap <silent> sh <C-w>h
+nnoremap <silent> sj <C-w>j
+nnoremap <silent> sk <C-w>k
+nnoremap <silent> sl <C-w>l
 
-" Move the current line above or below with ALT + [j/k].
-" TODO: Make this not fail on top or bottom of file
-noremap <A-k> ddkP
 
-" " Make j and k operate on virtual lines, not real lines.
-" nnoremap j gj
-" vnoremap j gj
-" nnoremap k gk
-" vnoremap k gk
+" Easily Create panes
+nnoremap <silent> ss <C-w>s
+nnoremap <silent> sv <C-w>v
 
-" " Make arrow keys also work on virtual lines
-" noremap  <buffer> <silent> <Up>   gk
-" noremap  <buffer> <silent> <Down> gj
-" inoremap <buffer> <silent> <Up>   <C-o>gk
-" inoremap <buffer> <silent> <Down> <C-o>gj
-
-" Auto center on matched string.
-noremap n nzz
-noremap N Nzz
-
-" Quickly close Quickfix and Location Windows
-nnoremap <script> <silent> <leader>tl :lclose<CR>
-nnoremap <script> <silent> <leader>tq :cclose<CR>
 
 " Jump to anywhere on screen with minimal keystrokes `s{char}{char}{label}`
-nmap s <Plug>(easymotion-overwin-f2)
+nmap m <Plug>(easymotion-overwin-f2)
 
 " Toggle spell check
-nnoremap <silent> <leader>s :set spell!<CR>
+nnoremap <leader>te :tabnew<CR>
 
 " Toggle file browser, undotree and Vista tagbar
 nnoremap <leader>u :UndotreeToggle<cr>
@@ -652,23 +627,12 @@ let g:NERDTrimTrailingWhitespace = 1
 
 " NerdCommenter }}}
 
-" Bullets.vim {{{
-
-let g:bullets_enabled_file_types = [
-            \ 'markdown',
-            \ 'pandoc',
-            \ 'text',
-            \ 'gitcommit',
-            \ 'scratch'
-            \]
-
-" END Bullets.vim }}}
-
 " Python {{{
 
 let python_highlight_all=1
 let g:python3_host_prog = '/bin/python3'
 let g:python_host_prog = '/bin/python2'
+
 
 " END Python }}}
 

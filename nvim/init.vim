@@ -1,31 +1,25 @@
-
 " Plugins {{{
 
 call plug#begin('~/.vim/plugged')
 
 " Dependency for gist-vim
 Plug 'mattn/webapi-vim'
-
+"
 " Syntax Highlighting, Linting and Completion
 Plug 'sheerun/vim-polyglot'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " Snippets
-" Plug 'SirVer/ultisnips'
-" Plug 'honza/vim-snippets'
+Plug 'SirVer/ultisnips'
 
 " File explorers
-Plug 'scloose/nerdtree'
-
-" fzf
+Plug 'preservim/nerdtree'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
 " Writing-related
-Plug 'szw/vim-dict'
 Plug 'junegunn/goyo.vim'
 Plug 'amix/vim-zenroom2'
-Plug 'junegunn/limelight.vim'
 Plug 'reedes/vim-litecorrect'
 
 " Themes
@@ -42,8 +36,11 @@ Plug 'liuchengxu/vista.vim'
 Plug 'junegunn/vim-peekaboo'
 
 " Markdown
-Plug 'godlygeek/tabular'
 Plug 'vim-pandoc/vim-pandoc-syntax'
+
+" Latex
+Plug 'lervag/vimtex'
+Plug 'KeitaNakamura/tex-conceal.vim'
 
 " Delimiters
 Plug 'jiangmiao/auto-pairs'
@@ -66,9 +63,6 @@ Plug 'psliwka/vim-smoothie'
 " Status Bar
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-
-" RipGrep
-Plug 'jremmen/vim-ripgrep'
 
 " Quick Jump
 Plug 'easymotion/vim-easymotion'
@@ -184,6 +178,7 @@ set autoindent
 
 set termguicolors
 set background=dark
+let g:gruvbox_italic=1
 let g:gruvbox_contrast_dark='hard'
 colorscheme gruvbox
 
@@ -544,6 +539,26 @@ let g:pandoc#syntax#codeblocks#embeds#langs = [ "python", "ruby", "c", "bash=sh"
 " END pandoc }}}
 
 " END Markdown }}}
+
+" Latex {{{
+    let g:UltiSnipsExpandTrigger = '<tab>'
+    let g:UltiSnipsJumpForwardTrigger = '<tab>'
+    let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
+
+" Vimtex }}}
+    let g:tex_flavor='latex'
+    let g:vimtex_view_method='zathura'
+    let g:vimtex_quickfix_mode=0
+" END Vimtex }}}
+
+" Tex-conceal }}}
+    set conceallevel=1
+    let g:tex_conceal='abdmg'
+    hi Conceal ctermbg=none
+" END Tex-conceal   }}}
+
+
+" END Latex }}}
 
 " fzf {{{
 

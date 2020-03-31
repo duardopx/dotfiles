@@ -1,0 +1,12 @@
+
+alias vi="nvim"
+alias vidiff="nvim -d"
+
+alias sys="systemclt"
+
+# file loations {{{
+alias vconf="~/.config/nvim/init.vim"
+alias tconf="~/tmux.config"
+#}}}
+
+alias fm="ranger"

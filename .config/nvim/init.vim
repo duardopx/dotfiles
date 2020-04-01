@@ -10,7 +10,7 @@ Plug 'sheerun/vim-polyglot'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " Snippets
-Plug 'SirVer/ultisnips'
+" Plug 'SirVer/ultisnips'
 
 " File explorers
 Plug 'preservim/nerdtree'
@@ -32,9 +32,6 @@ Plug 'ntpeters/vim-better-whitespace'
 " Tagbar
 Plug 'liuchengxu/vista.vim'
 
-" Register Preview
-Plug 'junegunn/vim-peekaboo'
-
 " Markdown
 Plug 'vim-pandoc/vim-pandoc-syntax'
 
@@ -53,16 +50,8 @@ Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-fugitive'
 Plug 'mattn/gist-vim'
 
-" Automatically resize windows
-Plug 'camspiers/animate.vim'
-Plug 'camspiers/lens.vim'
-
 " File Scrolling
 Plug 'psliwka/vim-smoothie'
-
-" Status Bar
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
 
 " Quick Jump
 Plug 'easymotion/vim-easymotion'
@@ -78,43 +67,6 @@ Plug 'mbbill/undotree'
 
 call plug#end()
 
-" Extended % matching
-runtime macros/matchit.vim
-
-" }}}
-
-" General Settings  {{{
-
-set secure
-set modeline
-set spelllang=en
-set mouse=nv
-set nostartofline
-set title
-set autoread
-set clipboard=unnamed
-set noshowmode
-set scrolloff=6
-set number
-set cmdheight=1
-set updatetime=300
-set cursorline
-set hidden
-set nobackup
-set splitbelow
-set splitright
-set signcolumn=yes
-set switchbuf=usetab
-set shortmess+=c
-set backspace=indent,eol,start
-set fillchars+=fold:.
-syntax on
-
-" Tab completion menu
-set wildmenu
-set wildmode=full
-set wildignore+=.svn,CVS,.git,*.pyc,*.o,*.a,*.class,*.mo,*.la,*.so,*.obj,*.swp,*.jpg,*.png,*.xpm,*.gif,*.pdf,*.bak,*.beam,*/tmp/*,*.zip,log/**,node_modules/**,target/**,tmp/**,*.rbc
-
 " Undo {{{
 
 set undolevels=1000
@@ -122,14 +74,6 @@ set undofile
 
 " END Undo }}}
 
-" Use gtf to jump to files with these extensions
-set suffixesadd=.md,.c,.h,.cpp,.py,.tex
-
-set tags=tags
-
-" Don't treat hyphens and underscores like whitespace
-set iskeyword+=-
-set iskeyword+=_
 
 " Search {{{
 
@@ -150,7 +94,7 @@ set nolinebreak
 set breakindent
 set breakindentopt=min:40
 highlight ColorColumn ctermbg=237
-set colorcolumn=81,121
+set colorcolumn=81
 
 " END Line breaking }}}
 
@@ -188,7 +132,6 @@ set fillchars+=vert:┃
 highlight VertSplit guifg=11
 
 
-
 " Vim Dev Icons {{{
 
 let g:WebDevIconsUnicodeGlyphDoubleWidth = 0
@@ -210,15 +153,6 @@ let g:vista_fzf_preview = ['right:50%']
 
 " AutoGroups {{{
 
-augroup AutoCloseVim
-    autocmd!
-    " Close vim if the quickfix window is the only window visible (and only tab)
-    " https://stackoverflow.com/a/7477056
-    autocmd WinEnter * if winnr('$') == 1 && &buftype == "quickfix" | quit | endif
-    " Close vim if only thing remaining is NERDTree
-    autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | quit | endif
-    " TODO: Close vim if all that remains is a no-name buffer
-augroup END
 
 
 augroup RestoreCursorPositionWhenOpeningFile
@@ -262,61 +196,14 @@ augroup GitCommitFormat
     autocmd FileType gitcommit set colorcolumn+=51
 augroup END
 
-augroup MarkdownConcealing
-    autocmd!
-    autocmd FileType markdown set conceallevel=0
-augroup END
-
-augroup SpellcheckAndWritingTools
-    autocmd!
-    autocmd FileType markdown setlocal spell | call litecorrect#init()
-    autocmd FileType text setlocal spell | call litecorrect#init()
-    hi SpellBad cterm=underline ctermfg=red
-augroup END
 
 augroup NoPasteAfterLeavingInsertMode
     autocmd!
     au InsertLeave * silent! set nopaste
 augroup END
 
-" tbh not sure if this should stay
-augroup coc-config
-  autocmd!
-  " Setup formatexpr specified filetype(s).
-  autocmd FileType typescript,json setlocal formatexpr=CocAction('formatSelected')
-  " Update signature help on jump placeholder
-  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-augroup end
 
 " END AutoGroups- }}}
-
-" Functions {{{
-
-" Modeline for nasm files
-function! AppendASMModeline() abort
-let l:modeline = printf("; vim: ft=nasm ts=%d sw=%d tw=%d et :",
-        \ &tabstop, &shiftwidth, &textwidth)
-  call append(line("$"), l:modeline)
-  doautocmd BufRead
-endfunction
-
-" Rename current file (mirrors $ mv)
-function! RenameFile() abort
-  let old_name = expand('%')
-  let new_name = input('New file name: ', expand('%'), 'file')
-  if new_name != '' && new_name != old_name
-    exec ':saveas ' . new_name
-    exec ':!trash ' . old_name
-    redraw!
-  endif
-endfunction
-
-function! ToggleNerdTree() abort
-    :NERDTreeToggle
-    :AirlineRefresh
-endfunction
-
-" END Functions }}}
 
 " Remappings {{{
 
@@ -333,20 +220,8 @@ nnoremap <leader>ez :drop ~/.zshrc<cr>
 nnoremap ; :
 
 
-" Don't overwrite copy register when deleting with x or X
-nnoremap x "_x
-nnoremap X "_X
-
 " Read modeline
 nnoremap <leader>mr :doautocmd BufRead<Cr>
-
-" Yeet those 'Not an editor command' errors right out the fucking window
-" Or, defenestrate, as my Dad would say.
-command! WQ wq
-command! Wq wq
-command! W w
-command! Q q
-command! Qa qa
 
 " Make U do the opposite of u (redo)
 nnoremap U <C-r>
@@ -381,16 +256,6 @@ nnoremap gp :Gpush<CR>
 nnoremap gs :Gstatus<CR>
 
 
-" Change word under cursor. Repeatable with . https://youtu.be/7Bx_mLDBtRc?t=130
-nnoremap c* *Ncgn
-
-" Quickly tabularize selected block
-vnoremap <leader>t :Tabularize / \|<cr>
-
-" Dictionary (definition) lookup
-nnoremap <leader>D :Dict<cr>
-vnoremap <leader>D :Dict<cr>
-
 " Distraction Free Mode
 nnoremap <silent> <leader>z :Goyo<cr>
 
@@ -419,9 +284,9 @@ nmap m <Plug>(easymotion-overwin-f2)
 nnoremap <leader>te :tabnew<CR>
 
 " Toggle file browser, undotree and Vista tagbar
-nnoremap <leader>u :UndotreeToggle<cr>
-nnoremap <C-n> :call ToggleNerdTree()<CR>
-nnoremap <Leader>v :Vista!!<CR>
+nnoremap <leader>u :UndotreeToggle <cr>
+nnoremap <C-n> :NERDTreeToggle <CR>
+nnoremap <Leader>v :Vista!! <CR>
 
 " Turn off search highlighting
 nnoremap <Leader>/ :noh<CR>
@@ -433,14 +298,11 @@ nnoremap <Leader>/ :noh<CR>
 " Note that this dictionary is purely for spelling correction and does not
 " allow you to look up definitions. That's why I have the vim-dict plugin.
 set dictionary+=/usr/share/dict/words
-set thesaurus+=~/.vim/thesaurus/mthesaur.txt
 
 " END Writing }}}
 
 " coc.nvim {{{
-" Heavily based on: https://github.com/neoclide/coc.nvim#example-vim-configuration
 
-" https://github.com/neoclide/coc.nvim/issues/856
 let g:coc_node_path = "/bin/node"
 
 " Use tab for trigger completion with characters ahead and navigate.
@@ -453,6 +315,13 @@ inoremap <silent><expr> <TAB>
       \ pumvisible() ? "\<C-n>" :
       \ <SID>check_back_space() ? "\<TAB>" :
       \ coc#refresh()
+
+" TODO: Use tab to trigger completion with support for snippets.
+" inoremap <silent><expr> <TAB>
+      " \ pumvisible() ? coc#_select_confirm() :
+      " \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+      " \ <SID>check_back_space() ? "\<TAB>" :
+      " \ coc#refresh()
 
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
@@ -477,6 +346,25 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
+
+" TODO: Snippets {{{
+
+" " Use <C-l> to trigger snippet expand.
+" imap <C-l> <Plug>(coc-snippets-expand)
+"
+" " Use <C-j> to select text for visual placeholder of snippet.
+" vmap <C-j> <Plug>(coc-snippets-select)
+"
+" " Jump to next placeholder.
+" let g:coc_snippet_next = '<c-k>'
+"
+" " Jump to previous placeholder.
+" let g:coc_snippet_prev = '<c-j>'
+"
+" " Use <C-j> to both expand and jump (make expand higher priority.)
+" imap <C-j> <Plug>(coc-snippets-expand-jump)
+
+" END Snippets }}}
 
 " Use H to show documentation in preview window
 nnoremap <silent> H :call <SID>show_documentation()<CR>
@@ -516,49 +404,7 @@ command! -nargs=? Fold :call CocAction('fold', <f-args>)
 
 " END coc.nvim }}}
 
-" Markdown {{{
-
-" Pandoc {{{
-
-" vim-pandoc {{{
-
-let g:pandoc#filetypes#handled = ["pandoc", "markdown"]
-let g:pandoc#filetypes#pandoc_markdown = 0
-
-" END vim-pandoc }}}
-
-" vim-pandoc-syntax {{{
-
-let g:pandoc#syntax#conceal#urls = 0
-let g:pandoc#syntax#conceal#blacklist = [ "codeblock_start", "codeblock_delim", "image", "block" ]
-let g:pandoc#modules#disabled = ["folding"]
-let g:pandoc#syntax#codeblocks#embeds#langs = [ "python", "ruby", "c", "bash=sh" ]
-
-" END vim-pandoc-syntax }}}
-
-" END pandoc }}}
-
-" END Markdown }}}
-
-" Latex {{{
-    let g:UltiSnipsExpandTrigger = '<tab>'
-    let g:UltiSnipsJumpForwardTrigger = '<tab>'
-    let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
-
-" Vimtex }}}
-    let g:tex_flavor='latex'
-    let g:vimtex_view_method='zathura'
-    let g:vimtex_quickfix_mode=0
-" END Vimtex }}}
-
-" Tex-conceal }}}
-    set conceallevel=1
-    let g:tex_conceal='abdmg'
-    hi Conceal ctermbg=none
-" END Tex-conceal   }}}
-
-
-" END Latex }}}
+" END coc.nvim }}}
 
 " fzf {{{
 
@@ -618,18 +464,6 @@ let g:better_whitespace_skip_empty_lines=1
 let g:show_spaces_that_precede_tabs=1
 
 " END Better Whitespace }}}
-
-" vim-airline {{{
-
-let g:airline_theme='onedark'
-" let g:airline_theme='gruvbox_material'
-let g:airline_powerline_fonts = 1
-" Enable the list of buffers
-let g:airline#extensions#tabline#enabled = 1
-" Show just the filename
-let g:airline#extensions#tabline#fnamemod = ':t'
-
-" END Airline }}}
 
 " NerdCommenter {{{
 

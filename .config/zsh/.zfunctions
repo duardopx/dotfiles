@@ -2,3 +2,9 @@ bkp()
 {
     cp $1 $1.bkp
 }
+
+
+ipinfo()
+{
+    curl ipinfo.io/$1
+}

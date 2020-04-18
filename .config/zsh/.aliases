@@ -1,0 +1,36 @@
+alias vi="nvim"
+alias vidiff="nvim -d"
+alias py="python3"
+alias exp="python2"
+
+alias ss="sudo systemctl"
+
+alias fm="ranger"
+
+alias mkdir="mkdir -vp -Z"
+
+alias ra='ranger'
+
+# alias htb="sudo openvpn ~/Desktop/duardopx"
+
+alias cdp="cd ~/projects"
+
+# alias server = python3 -m http.server
+
+alias ez='nvim ~/.zshrc'
+alias et='nvim ~/.tmux.conf'
+alias ev='nvim ~/.config/nvim/init.vim'
+
+# Git / Hub
+alias git='hub'
+alias pr='hub pull-request'
+alias changelog='github_changelog_generator'
+alias mdpreview='grip -b'
+alias gs='hub status'
+alias gcm='hub commit -m'
+alias gpsh='hub push'
+alias ga='hub add'
+alias gpll='hub pull'
+
+alias sha1='openssl dgst -sha1'
+alias sha256='openssl dgst -sha256'

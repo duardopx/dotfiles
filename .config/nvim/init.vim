@@ -1,48 +1,37 @@
-" Plugins {{{
 
 call plug#begin('~/.vim/plugged')
 
-" Dependency for gist-vim
 Plug 'mattn/webapi-vim'
-"
-" Syntax Highlighting, Linting and Completion
+
 Plug 'sheerun/vim-polyglot'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " Snippets
 " Plug 'SirVer/ultisnips'
 
-" File explorers
 Plug 'preservim/nerdtree'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
-" Writing-related
 Plug 'junegunn/goyo.vim'
 Plug 'amix/vim-zenroom2'
+Plug 'junegunn/limelight.vim'
 Plug 'reedes/vim-litecorrect'
 
-" Themes
 Plug 'gruvbox-community/gruvbox'
 
-" General Appearance
 Plug 'ryanoasis/vim-devicons'
 Plug 'ntpeters/vim-better-whitespace'
 
-" Tagbar
 Plug 'liuchengxu/vista.vim'
 
-" Markdown
 Plug 'vim-pandoc/vim-pandoc-syntax'
 
-" Latex
 Plug 'lervag/vimtex'
 Plug 'KeitaNakamura/tex-conceal.vim'
 
-" Delimiters
 Plug 'jiangmiao/auto-pairs'
 
-" Surrounding text
 Plug 'tpope/vim-surround'
 
 " Git and GitHub
@@ -55,9 +44,13 @@ Plug 'psliwka/vim-smoothie'
 
 " Quick Jump
 Plug 'easymotion/vim-easymotion'
+Plug 'rhysd/clever-f.vim'
 
 " Commenting
 Plug 'scrooloose/nerdcommenter'
+
+" Register Preview
+Plug 'junegunn/vim-peekaboo'
 
 " TimeTracking
 Plug 'wakatime/vim-wakatime'
@@ -66,6 +59,50 @@ Plug 'wakatime/vim-wakatime'
 Plug 'mbbill/undotree'
 
 call plug#end()
+
+" General Settings  {{{
+
+set secure
+set modeline
+set spelllang=en
+set mouse=nv                    " Use mouse for pane selection, resizing, and cursor movement.
+set nostartofline               " Don’t reset cursor to start of line when moving around.
+set title                       " Show the filename in the window titlebar
+set autoread                    " Autoread changed files
+
+" Enable copying to system clipboard
+set clipboard=unnamedplus
+
+set noshowmode                  " Don't show mode under statusline w/ mode
+set scrolloff=6                 " Minimal num of lines to keep above/below cursor
+set number                      " Enable line numbers
+set cmdheight=1                 " Better display for messages
+set updatetime=300              " Smaller updatetime for CursorHold & CursorHoldI
+set cursorline                  " Highlight current line
+set hidden                      " Enable buffers to exist in the background
+set nobackup                    " Don't keep a backup file. writebackup is enough for my purposes.
+set splitbelow                  " Open new horizontal splits to the bottom
+set splitright                  " And vertical splits to the right
+set signcolumn=yes              " Always show signcolumns
+set switchbuf=usetab            " Search first in opened windows if opening buffer
+set shortmess+=c                " Don't give ins-completion-menu messages
+set backspace=indent,eol,start  " Make delete in insert mode behave as expected.
+set fillchars+=fold:.           " Make folds pretty.
+syntax on
+
+" Tab completion menu
+set wildmenu
+set wildmode=full
+set wildignore+=.svn,CVS,.git,*.pyc,*.o,*.a,*.class,*.mo,*.la,*.so,*.obj,*.swp,*.jpg,*.png,*.xpm,*.gif,*.pdf,*.bak,*.beam,*/tmp/*,*.zip,log/**,node_modules/**,target/**,tmp/**,*.rbc
+
+" Use gtf to jump to files with these extensions
+set suffixesadd=.md,.c,.h,.cpp,.py,.tex
+
+set tags=tags
+"
+" Don't treat hyphens and underscores like whitespace
+set iskeyword+=-
+set iskeyword+=_
 
 " Undo {{{
 
@@ -202,8 +239,37 @@ augroup NoPasteAfterLeavingInsertMode
     au InsertLeave * silent! set nopaste
 augroup END
 
+augroup GoyoConfig
+    autocmd!
+    autocmd User GoyoEnter Limelight0.2 | call <SID>goyo_enter()
+    autocmd User GoyoLeave Limelight! | call <SID>goyo_leave()
+augroup END
+
 
 " END AutoGroups- }}}
+
+" Goyo {{{
+
+function! s:goyo_enter()
+  let b:quitting = 0
+  let b:quitting_bang = 0
+  autocmd QuitPre <buffer> let b:quitting = 1
+  cabbrev <buffer> q! let b:quitting_bang = 1 <bar> q!
+endfunction
+
+function! s:goyo_leave()
+  " Quit Vim if this is the only remaining buffer
+  if b:quitting && len(filter(range(1, bufnr('$')), 'buflisted(v:val)')) == 1
+    if b:quitting_bang
+      qa!
+    else
+      qa
+    endif
+  endif
+endfunction
+
+" END Goyo }}}
+
 
 " Remappings {{{
 
@@ -218,10 +284,6 @@ nnoremap <leader>ez :drop ~/.zshrc<cr>
 
 " Make : commands easier
 nnoremap ; :
-
-
-" Read modeline
-nnoremap <leader>mr :doautocmd BufRead<Cr>
 
 " Make U do the opposite of u (redo)
 nnoremap U <C-r>
@@ -265,6 +327,19 @@ nnoremap <silent> <leader>z :Goyo<cr>
 nnoremap < :bprevious<CR>
 nnoremap > :bnext<CR>
 
+nnoremap <C-h> :tabprevious<CR>
+nnoremap <C-l> :tabnext<CR>
+nnoremap <C-a> :tabnew<CR>
+nnoremap <C-x> :tabclose<CR>
+
+" switch to autocomplete parameters
+nnoremap <C-j> <C-k><CR>
+nnoremap <C-k> <C-j><CR>
+
+map <C-k> <C-u>
+map <C-j> <C-d>
+
+
 " Easily move between panes
 nnoremap <silent> sh <C-w>h
 nnoremap <silent> sj <C-w>j
@@ -280,8 +355,6 @@ nnoremap <silent> sv <C-w>v
 " Jump to anywhere on screen with minimal keystrokes `s{char}{char}{label}`
 nmap m <Plug>(easymotion-overwin-f2)
 
-" Toggle spell check
-nnoremap <leader>te :tabnew<CR>
 
 " Toggle file browser, undotree and Vista tagbar
 nnoremap <leader>u :UndotreeToggle <cr>

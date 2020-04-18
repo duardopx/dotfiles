@@ -1,5 +1,6 @@
 eval scr.color = true
 eval dbg.bep   = entry
+
 # Show stack and regs in visual mode in a slow but verbose mode
 eval dbg.slow = true
 

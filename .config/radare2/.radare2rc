@@ -8,16 +8,16 @@ eval file.id   = true
 eval file.flag = true
 eval file.analyze = true
 
-# Show comments at right of disassembly if they fit in screen
+# Show comments at right of disassembly
 eval asm.cmtright = true
 
-# Display stack and register values on top of disasembly view (visual mode)
-eval cmd.stack = true
-eco tango
+# Display stack and register on (visual mode)
+eco focus
 eval scr.utf8 = true
+eval cmd.stack = true
 eval asm.relsub = true
 eval asm.syntax = intel
 
-# Shows pseudocode in disassembly.
+# Shows pseudocode.
 eval asm.pseudo = true
 eval asm.describe = true

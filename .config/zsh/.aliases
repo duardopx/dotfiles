@@ -1,36 +1,87 @@
-alias vi="nvim"
-alias vidiff="nvim -d"
-alias py="python3"
-alias exp="python2"
+# NVim {{{
 
-alias ss="sudo systemctl"
+    alias vi="nvim"
+    alias vid='nvim -d'
 
-alias fm="ranger"
+# }}}
 
-alias mkdir="mkdir -vp -Z"
 
-alias ra='ranger'
+# Verbosly {{{
 
-# alias htb="sudo openvpn ~/Desktop/duardopx"
+        alias cp='cp -riv'
+        alias mv='mv -iv'
+        alias rm='rm -iv'
+        alias mkdir='mkdir -pv'
 
-alias cdp="cd ~/projects"
+# }}}
 
-# alias server = python3 -m http.server
+# Update {{{
 
-alias ez='nvim ~/.zshrc'
-alias et='nvim ~/.tmux.conf'
-alias ev='nvim ~/.config/nvim/init.vim'
+    alias vimup="nvim '+PlugUpdate' '+PlugUpgrade' '+CocUpdate' '+qall';"
+    alias pipup="pip list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U"
 
-# Git / Hub
-alias git='hub'
-alias pr='hub pull-request'
-alias changelog='github_changelog_generator'
-alias mdpreview='grip -b'
-alias gs='hub status'
-alias gcm='hub commit -m'
-alias gpsh='hub push'
-alias ga='hub add'
-alias gpll='hub pull'
+# }}}
 
-alias sha1='openssl dgst -sha1'
-alias sha256='openssl dgst -sha256'
+
+
+# Git {{{
+
+    alias gi='git init'
+    alias ga='git add'
+    alias gs='git status -s'
+    alias gcm='git commit -v -m'
+    alias gps='git push'
+    alias gpl='git pull'
+    alias gdf='git diff'
+    alias gmv='git mv'
+    alias gl='git log'
+    alias pr='git pull-request'
+
+# }}}
+
+# Reverse {{{
+
+    alias objdumpd='objdump -M intel -d'
+
+# }}}
+
+# Config {{{
+
+    alias aliases="nvim $XDG_CONFIG_HOME/zsh/.aliases"
+    alias zfunctions="nvim $XDG_CONFIG_HOME/zsh/.zfunctions"
+    alias zshrc="nvim $XDG_CONFIG_HOME/zsh/.zshrc"
+    alias zshenv="nvim $HOME/.zshenv"
+    alias vimrc="nvim $XDG_CONFIG_HOME/nvim/init.vim"
+    alias tmuxrc="nvim ~/.tmux/tmux.conf"
+
+# }}}
+
+# Hash {{{
+
+    alias sha1='openssl dgst -sha1'
+    alias sha256='openssl dgst -sha256'
+
+# }}}
+
+# Habits {{{
+
+    alias ;wq="exit"
+    alias ;q="exit"
+
+# }}}
+
+# Taskwarrior {{{
+
+    alias t='task list'
+    alias tasks='task next'
+
+# }}}
+
+# Convinience {{{
+
+    alias b64="base64"
+    alias py="python3"
+    alias fm="ranger"
+    alias server="python3 -m http.server"
+
+# }}}

@@ -15,12 +15,16 @@ Plug 'jiangmiao/auto-pairs'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
-
 " File explorer
-Plug 'preservim/nerdtree'
+Plug 'Shougo/unite.vim'
+Plug 'Shougo/vimfiler.vim'
 
 " Themes
 Plug 'gruvbox-community/gruvbox'
+
+" Status Bar
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 
 " Icons
 Plug 'ryanoasis/vim-devicons'
@@ -126,16 +130,12 @@ set softtabstop=4
 set shiftwidth=4
 set autoindent
 
-" Theme 
+" " Theme
 set termguicolors
 set background=dark
 let g:gruvbox_italic=1
 let g:gruvbox_contrast_dark='hard'
 colorscheme gruvbox
-
-" Make vertical splits prettier
-set fillchars+=vert:┃
-highlight VertSplit guifg=11
 
 " Vista
 let g:vista_icon_indent = ["╰─▸ ", "├─▸ "]
@@ -143,10 +143,15 @@ let g:vista#renderer#enable_icon = 1
 let g:vista_fzf_preview = ['right:50%']
 
 " AutoGroups
-augroup LineNumbers
-    autocmd!
-    autocmd InsertEnter * :set number
-    autocmd InsertLeave * :set relativenumber
+" augroup LineNumbers
+    " autocmd!
+    " autocmd InsertEnter * :set number
+    " autocmd InsertLeave * :set relativenumber
+" augroup END
+
+augroup CursorLine
+    autocmd WinEnter * setlocal cursorline
+    autocmd WinLeave * setlocal nocursorline
 augroup END
 
 augroup Indentation
@@ -197,11 +202,21 @@ endfunction
 
 
 " Remappings
+"
 nnoremap ; :
 
 " Scroll
-map <C-i> <C-d>
-map <C-o> <C-u>
+nnoremap <C-i> <C-d>
+nnoremap <C-o> <C-u>
+
+" Switch tab
+nmap <S-Tab> :tabprev<Return>
+nmap <Tab> :tabnext<Return>
+
+" File tree
+nmap sf :VimFilerBufferDir<Return>
+nmap sF :VimFilerExplorer -find<Return>
+nmap sb :Unite buffer<Return>
 
 " Set , as leader
 let mapleader = ","
@@ -231,10 +246,10 @@ nnoremap <C-p>.. :Files ../..<CR>
 nnoremap <leader>b :Buffers<CR>
 
 " Git Mappings
-
-" Open selection on github
+nnoremap <leader>g :Git<CR>
 nnoremap go :.Gbrowse<CR>
 vnoremap go :'<,'>.Gbrowse<CR>
+nnoremap gs :Git<CR>
 
 " Quickly select the text you just pasted
 nnoremap gV `[v`]
@@ -249,6 +264,7 @@ nnoremap <silent> <leader>z :Goyo<cr>
 " Traverse buffer list more easily.
 nnoremap < :bprevious<CR>
 nnoremap > :bnext<CR>
+nmap <Space> <C-w>w
 
 " Easily move between panes
 nnoremap <silent> sh <C-w>h
@@ -270,12 +286,11 @@ vnoremap k gk
 nmap m <Plug>(easymotion-overwin-f2)
 
 " Toggle file browser, undotree and Vista tagbar
-map <C-n> :NERDTreeToggle<CR>
 nnoremap <leader>u :UndotreeToggle<cr>
 nnoremap <Leader>v :Vista!!<CR>
 
 " Turn off search highlighting
-nnoremap <Leader>/ :noh<CR>
+nnoremap sn :noh<CR>
 
 
 " vim-pandoc-syntax
@@ -359,10 +374,6 @@ command! -nargs=0 Format :call CocAction('format')
 command! -nargs=? Fold :call CocAction('fold', <f-args>)
 
 
-"Nerdtree
-let NERDTreeShowHidden = 1
-let NERDTreeStatusline = 0
-
 " Python
 let python_highlight_all=1
 let g:python3_host_prog = '/usr/bin/python3'
@@ -377,5 +388,18 @@ let g:vimtex_quickfix_mode=0
 set conceallevel=1
 let g:tex_conceal='abdmg'
 
+let g:airline_theme='gruvbox'
+let g:airline_powerline_fonts = 1
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#fnamemod = ':t'
+let g:airline#extensions#wordcount#filetypes = ['asciidoc', 'markdown', 'pandoc', 'rst', 'tex', 'text']
+let g:airline#extensions#wordcount#enabled = 1
 
-hi StatusLine ctermbg=black ctermfg=white
+" file tree
+let g:vimfiler_as_default_explorer = 1
+let g:vimfiler_safe_mode_by_default = 0
+let g:vimfiler_enable_auto_cd = 0
+let g:vimfiler_tree_leaf_icon = ''
+let g:vimfiler_tree_opened_icon = '▾'
+let g:vimfiler_tree_closed_icon = '▸'
+let g:vimfiler_marked_file_icon = '✓'

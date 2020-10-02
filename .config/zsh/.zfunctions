@@ -1,10 +1,10 @@
-bkp()
-{
+
+# Easy way to create bkp files
+bkp() {
     cp $1 $1.bkp
 }
 
-
-ipinfo()
-{
+# Consult ipinfo
+ipinfo() {
     curl ipinfo.io/$1
 }

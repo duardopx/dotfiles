@@ -1,87 +1,64 @@
-# NVim {{{
-
-    alias vi="nvim"
-    alias vid='nvim -d'
-
-# }}}
+# NVim
+alias vi="nvim"
+alias vid='nvim -d'
 
 
-# Verbosly {{{
-
-        alias cp='cp -riv'
-        alias mv='mv -iv'
-        alias rm='rm -iv'
-        alias mkdir='mkdir -pv'
-
-# }}}
-
-# Update {{{
-
-    alias vimup="nvim '+PlugUpdate' '+PlugUpgrade' '+CocUpdate' '+qall';"
-    alias pipup="pip list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U"
-
-# }}}
+# Verbosly
+alias cp='cp -riv'
+alias mv='mv -iv'
+alias rm='rm -iv'
+alias mkdir='mkdir -pv'
 
 
+# Update
+alias vimup="nvim '+PlugUpdate' '+PlugUpgrade' '+CocUpdate' '+qall';"
+alias pipup="pip list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U"
 
-# Git {{{
 
-    alias gi='git init'
-    alias ga='git add'
-    alias gs='git status -s'
-    alias gcm='git commit -v -m'
-    alias gps='git push'
-    alias gpl='git pull'
-    alias gdf='git diff'
-    alias gmv='git mv'
-    alias gl='git log'
-    alias pr='git pull-request'
+# Git
+alias gi='git init'
+alias ga='git add'
+alias gs='git status -s'
+alias gcm='git commit -v -m'
+alias gps='git push'
+alias gpl='git pull'
+alias gdf='git diff'
+alias gmv='git mv'
+alias gl='git log'
+alias pr='git pull-request'
 
-# }}}
 
-# Reverse {{{
+# Reverse
+alias objdumpd='objdump -M intel -d'
 
-    alias objdumpd='objdump -M intel -d'
 
-# }}}
+# Config files shorcut
+alias aliases="nvim $XDG_CONFIG_HOME/zsh/.aliases"
+alias zfunctions="nvim $XDG_CONFIG_HOME/zsh/.zfunctions"
+alias zshrc="nvim $XDG_CONFIG_HOME/zsh/.zshrc"
+alias zshenv="nvim $HOME/.zshenv"
+alias vimrc="nvim $XDG_CONFIG_HOME/nvim/init.vim"
+alias tmuxrc="nvim ~/.tmux.conf"
 
-# Config {{{
 
-    alias aliases="nvim $XDG_CONFIG_HOME/zsh/.aliases"
-    alias zfunctions="nvim $XDG_CONFIG_HOME/zsh/.zfunctions"
-    alias zshrc="nvim $XDG_CONFIG_HOME/zsh/.zshrc"
-    alias zshenv="nvim $HOME/.zshenv"
-    alias vimrc="nvim $XDG_CONFIG_HOME/nvim/init.vim"
-    alias tmuxrc="nvim ~/.tmux/tmux.conf"
+# Hash
+alias sha1='openssl dgst -sha1'
+alias sha256='openssl dgst -sha256'
 
-# }}}
 
-# Hash {{{
+# Habits 
+alias ;wq="exit"
+alias ;q="exit"
 
-    alias sha1='openssl dgst -sha1'
-    alias sha256='openssl dgst -sha256'
 
-# }}}
+# Taskwarrior
+alias t='task list'
+alias tasks='task next'
 
-# Habits {{{
 
-    alias ;wq="exit"
-    alias ;q="exit"
-
-# }}}
-
-# Taskwarrior {{{
-
-    alias t='task list'
-    alias tasks='task next'
-
-# }}}
-
-# Convinience {{{
-
-    alias b64="base64"
-    alias py="python3"
-    alias fm="ranger"
-    alias server="python3 -m http.server"
-
-# }}}
+# Convinience
+alias b64="base64"
+alias py="python3"
+alias ipy="ipython3"
+alias fm="ranger"
+alias server="python3 -m http.server"
